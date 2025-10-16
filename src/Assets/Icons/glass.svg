@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" width="200" height="400">
+    <!-- Glass Body -->
+    <defs>
+        <linearGradient id="glassBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(255,255,255,0.2); stop-opacity:0.1" />
+            <stop offset="100%" style="stop-color:rgba(255,255,255,0.15); stop-opacity:0.2" />
+        </linearGradient>
+    </defs>
+    <rect x="30" y="40" width="140" height="320" rx="20" ry="20" fill="url(#glassBodyGrad)"
+        stroke="rgba(0, 0, 0, 0.3)" stroke-width="2" />
+
+    <!-- Water in Glass -->
+    <defs>
+        <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(173,216,230,0.5)" />
+            <stop offset="100%" style="stop-color:rgba(173,216,230,0.7)" />
+        </linearGradient>
+    </defs>
+    <rect x="30" y="200" width="140" height="160" rx="20" ry="20" fill="url(#waterGrad)" />
+
+    <!-- Surface Bubbles -->
+    <circle cx="60" cy="200" r="2" fill="rgba(255, 255, 255, 0.8)" />
+    <circle cx="100" cy="200" r="3" fill="rgba(255, 255, 255, 0.8)" />
+    <circle cx="140" cy="200" r="2" fill="rgba(255, 255, 255, 0.8)" />
+
+    <!-- Bubbles inside water -->
+    <circle cx="110" cy="250" r="5" fill="rgba(255, 255, 255, 0.6)" />
+    <circle cx="90" cy="270" r="3" fill="rgba(255, 255, 255, 0.6)" />
+    <circle cx="100" cy="290" r="2" fill="rgba(255, 255, 255, 0.6)" />
+    <circle cx="120" cy="310" r="4" fill="rgba(255, 255, 255, 0.6)" />
+
+    <!-- Glass Highlight -->
+    <rect x="40" y="50" width="20" height="300" fill="rgba(255, 255, 255, 0.15)" />
+    <rect x="140" y="50" width="10" height="300" fill="rgba(255, 255, 255, 0.05)" />
+</svg>

@@ -1,0 +1,25 @@
+// export const colors = {
+//     primary: '#1C003B',
+//     secondary: '#F6075A', 
+//     white: '#FFFFFF',
+//     iconColor: "#0FAAFA",
+//     red: '#C11018',
+//     placeholderText: '#4E4D60',
+//     lightText: '#B3B2C2',
+//     placeholderColor: '#EDEDED',
+//     blackShade: '#1D1B30',
+//     black: '#000000', 
+//     facebookBlue: '#0265DD',
+//     lightBlueText: '#03A2F4',
+//     orange: '#F14336', 
+//     skinColor: '#FED0AB',
+//     text: '#34324B', 
+//     lightgray: '#D9D9D9',
+//     unselectedTab: '#DBC2F6',
+//     unselectedHome: '#F6EEFF',
+//     drawerItem: '#282739',
+//     headingText: '#2F2E43',
+//     lightGrayLine: "#F3F3F3",
+//     greenIcon: '#00BA00'
+//   };
+  

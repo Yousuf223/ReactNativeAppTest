@@ -1,0 +1,41 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/Assets/fonts/index.js",
+      "sha1": "538eabe29b79fb90772ef2d57b454e892dc3d0d1"
+    },
+    {
+      "path": "src/Assets/fonts/IvyMode-Bold.ttf",
+      "sha1": "0679b1edd3835a75c0c1946499601d08a4cadc26"
+    },
+    {
+      "path": "src/Assets/fonts/IvyMode-Light.ttf",
+      "sha1": "9bc87cc9c4dda10f6c2c7338ea7ed67954c9d584"
+    },
+    {
+      "path": "src/Assets/fonts/IvyMode-Regular.ttf",
+      "sha1": "1dd247371a4d16a6913cc3cf4bc6efd67e5142f3"
+    },
+    {
+      "path": "src/Assets/fonts/IvyMode-SemiBold.ttf",
+      "sha1": "d2cd348d8655d00bcc3130c2d5e2b8db3d995572"
+    },
+    {
+      "path": "src/Assets/fonts/Poppins-Bold.ttf",
+      "sha1": "875cf0cecd647bcf22e79d633d868c1b1ec98dfa"
+    },
+    {
+      "path": "src/Assets/fonts/Poppins-Light.ttf",
+      "sha1": "e247a92158e112f8bf7b638c8d95381d66b00dbb"
+    },
+    {
+      "path": "src/Assets/fonts/Poppins-Regular.ttf",
+      "sha1": "fdd3002e7d814ee47c1c1b8487c72c6bbb3a2d00"
+    },
+    {
+      "path": "src/Assets/fonts/Poppins-SemiBold.ttf",
+      "sha1": "8a4ace9392d06bcb7f8ea2f5169b07e4c383a90d"
+    }
+  ]
+}
