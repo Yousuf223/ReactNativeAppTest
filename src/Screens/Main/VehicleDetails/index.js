@@ -682,9 +682,9 @@ const VehicleDetails = ({ route, navigation }) => {
           </View>
           <View style={styles.separator} />
           <MainButton
-            title={'Add Records'}
+            title={'Add Parts'}
             onPress={() =>
-              navigation.navigate(routes.main.addmaintenancerecord, {
+              navigation.navigate(routes.main.AddPart, {
                 vehicleIdPrefilled: vehicle?._id,
               })
             }

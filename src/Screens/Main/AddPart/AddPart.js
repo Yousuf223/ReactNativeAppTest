@@ -3,7 +3,7 @@ import { ScrollView, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { executeApiRequest } from '../../../Api/methods/method';
-import { useAddMutation } from '../../../Api/vehiclesApiSlice';
+import { useAddMutation } from '../../../Api/partApi';
 import CustomHeader from '../../../Components/CustomHeader';
 import InputField from '../../../Components/InputField';
 import CustomDatePicker from '../../../Components/CustomDatePicker';
@@ -33,7 +33,6 @@ const partValidation = Yup.object().shape({
   warranty: Yup.string().required('Warranty info required'),
   purchaseDate: Yup.date().required('Purchase date is required'),
   receiptImage: Yup.mixed().required('Receipt image required'),
-  boxImage: Yup.mixed().required('Box image required'),
 });
 
 const AddPart = ({ navigation }) => {
@@ -49,24 +48,23 @@ const AddPart = ({ navigation }) => {
       warranty: values.warranty,
       purchaseDate: values.purchaseDate,
       receiptImage: values.receiptImage,
-      boxImage: values.boxImage,
     };
 
     LOG('Add Part Payload:', payload);
 
-    // const response = await executeApiRequest({
-    //   apiCallFunction: add,
-    //   body: payload,
-    //   formData: true,
-    //   toast: true,
-    //   timeout: 30000,
-    // });
+    const response = await executeApiRequest({
+      apiCallFunction: add,
+      body: payload,
+      formData: true,
+      toast: true,
+      timeout: 30000,
+    });
 
-    // if (response) {
-    //   LOG('Part Added Successfully:', response);
-    //   setModalVisible(true);
-    //   setTimeout(() => navigation.navigate(routes?.tab?.vehicles), 1000);
-    // }
+    if (response) {
+      LOG('Part Added Successfully:', response);
+      setModalVisible(true);
+      setTimeout(() => navigation.navigate(routes?.tab?.vehicles), 1000);
+    }
   };
 
   return (
@@ -86,7 +84,6 @@ const AddPart = ({ navigation }) => {
             warranty: '',
             purchaseDate: '',
             receiptImage: null,
-            boxImage: null,
           }}
           validationSchema={partValidation}
           onSubmit={handleSubmitForm}>
@@ -200,12 +197,7 @@ const AddPart = ({ navigation }) => {
                     handleImage={img => setFieldValue('receiptImage', img)}
                     errors={touched.receiptImage && errors.receiptImage}
                   />
-                  <View style={{height:30}}></View>
-                  <DocumentImagePicker
-                    label="Upload Box Image"
-                    handleImage={img => setFieldValue('boxImage', img)}
-                    errors={touched.boxImage && errors.boxImage}
-                  />
+                
 
                   {isLoading ? (
                     <ActivityLoader

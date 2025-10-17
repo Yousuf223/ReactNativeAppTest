@@ -16,11 +16,13 @@ import {
 } from '../../../Api/paymentApiSlice';
 import { LOG } from '../../../Utils/helperFunction';
 import ActivityLoader from '../../../Components/ActivityLoader';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { executeApiRequest } from '../../../Api/methods/method';
+import { useAddMutation } from '../../../Api/vehiclesApiSlice';
 const { width, height } = Dimensions?.get('screen');
 
 
-const SubscriptionPlan = ({ navigation }) => {
+const SubscriptionPlan = ({ navigation,route }) => {
   const { data, isLoading, isFetching, error, refetch } =
     useFetchPaymentByUserQuery({ refetchOnMountOrArgChange: true });
 
@@ -31,9 +33,36 @@ const SubscriptionPlan = ({ navigation }) => {
     error: isPaymentError,
     refetch: isPaymentRefetch,
   } = useFetchPaymentByUserIDQuery();
-  LOG('ddDUSERATA: ', IsPaymentData);
+  const { subscriptionId, payload, from } = route.params || {};
+  const [add] = useAddMutation();
+console.log('payload',payload)
+  const handlePaymentSuccess = async () => {
+    try {
+      // 1️⃣ Mark payment as done
+      await AsyncStorage.setItem('AddPayment', 'true');
+      if (from === 'AddVehicleDetails' && payload) {
+        const response = await executeApiRequest({
+          apiCallFunction: add,
+          body: payload,
+          formData: true,
+          toast: true,
+          timeout: 30000,
+        });
 
-  console.log('datadatadata', data);
+        if (response) {
+        navigation?.pop(2)
+        }
+      } else {
+        // Otherwise just go back to home or confirmation
+        navigation?.navigate(routes?.main?.paymentDetails, {
+          subscriptionId: item?._id,
+        });
+      }
+    } catch (err) {
+      console.error('Payment handling error:', err);
+    }
+  };
+
 
 
   const [selectedPlanType, setSelectedPlanType] = useState('MONTHLY');
@@ -156,10 +185,8 @@ const SubscriptionPlan = ({ navigation }) => {
                       textStyle={{ color: colors.text.dimBlack }}
                       hideIcon={true}
                       onPress={() => {
-                        // Alert.alert(item?._id)
-                        navigation?.navigate(routes?.main?.paymentDetails, {
-                          subscriptionId: item?._id,
-                        });
+                        handlePaymentSuccess()
+
                       }}
                     />
                   </View>

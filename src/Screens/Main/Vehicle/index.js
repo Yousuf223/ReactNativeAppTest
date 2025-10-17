@@ -178,12 +178,12 @@ const Vehicle = ({ navigation }) => {
         title={'Add Vehicle'}
         onPress={handleAddVehicle}
       />
-      <View style={{marginTop:10}}>
+      {/* <View style={{marginTop:10}}>
             <MainButtonWithGradient
         title={'Add Part'}
         onPress={()=> navigation.navigate(routes?.main?.AddPart)}
       />
-      </View>
+      </View> */}
     </View>
   );
 

@@ -1,5 +1,5 @@
 import { Formik } from 'formik';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { executeApiRequest } from '../../../Api/methods/method';
 import { useAddMutation } from '../../../Api/vehiclesApiSlice';
@@ -22,40 +22,61 @@ import { styles } from './styles';
 import vehicleValidation from './vehicleValidation';
 import { useFetchVehicleTypesQuery } from '../../../Api/vehicleTypesApiSlice';
 import routes from '../../../Navigation/routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddVehicleDetails = ({ route, navigation }) => {
   const vehicleDetails = route?.params;
   const [add, { isLoading }] = useAddMutation();
   const item = vehicleDetails?.vehicleDetails;
   const [isModalVisible, setModalVisible] = useState(false);
+    const [AddPayment, setAddPayment] = useState(false);
+
+useEffect(() => {
+  const getPaymentStatus = async () => {
+    const value = await AsyncStorage.getItem('AddPayment');
+    setAddPayment(value === 'true'); // store boolean
+  };
+  getPaymentStatus();
+}, []);
 
   const { data: vehicleTypes } = useFetchVehicleTypesQuery();
 
   // form submit
-  const handleSubmitForm = async values => {
-    LOG('valuesGallery', values?.gallery);
-    let payload = {
-      ...values,
-      hasTurboCharger: values?.hasTurboCharger ? true : false,
-      vehicleType: item?._id,
-    };
-
-    LOG('payloadpayloadpayloadpayload', payload);
-
-    const response = await executeApiRequest({
-      apiCallFunction: add,
-      body: payload,
-      formData: true,
-      toast: true,
-      timeout: 30000,
-    });
-
-    LOG('Vehicle Add Success:', response);
-    if (response) {
-      setModalVisible(true);
-      setTimeout(() => navigation?.pop(2), 1000);
-    }
+const handleSubmitForm = async values => {
+  LOG('valuesGallery', values?.gallery);
+  let payload = {
+    ...values,
+    hasTurboCharger: values?.hasTurboCharger ? true : false,
+    vehicleType: item?._id,
   };
+
+
+
+  // 🔹 Check AddPayment status
+  if (!AddPayment) {
+    navigation.navigate(routes.main.subscriptionplan, {
+      payload:payload, 
+      from: 'AddVehicleDetails',
+    });
+    return; 
+  }
+
+  // 🔹 Otherwise, proceed to add vehicle normally
+  const response = await executeApiRequest({
+    apiCallFunction: add,
+    body: payload,
+    formData: true,
+    toast: true,
+    timeout: 30000,
+  });
+
+  LOG('Vehicle Add Success:', response);
+  if (response) {
+    setModalVisible(true);
+    setTimeout(() => navigation?.pop(2), 1000);
+  }
+};
+
 console.log('item?.nameitem?.name',item?.name)
   return (
     <>

@@ -177,31 +177,7 @@ const AddMaintenanceRecord = props => {
     Autoparts = [{ key: 0, value: 'No Item found', id: 'no_item_found' }];
   }
 
-  // Process mechanics from selected store data
-  // let Mechanics = [];
-  // if (selectedStoreData) {
-  //   const store = selectedStoreData;
-  //   if (store.mechanics && store.mechanics.length > 0) {
-  //     Mechanics = store.mechanics.map((mechanic, index) => ({
-  //       key: index,
-  //       value: mechanic.name ?? '',
-  //       id: mechanic._id ?? '',
-  //     }));
-  //   } else {
-  //     Mechanics.push({
-  //       key: 0,
-  //       value: 'No mechanics available',
-  //       id: '',
-  //     });
-  //   }
-  // } else if (selectedStore) {
-  //   Mechanics.push({
-  //     key: 0,
-  //     value: 'No mechanics available',
-  //     id: '',
-  //   });
-  // }
-
+  
   let Conditions = [
     { key: '0', value: 'NEW', id: 0 },
     { key: '1', value: 'USED', id: 1 },
@@ -302,21 +278,8 @@ const AddMaintenanceRecord = props => {
 
   const FilterInputRender = ({ values, setFieldValue, touched, errors }) => (
     <View style={styles.barcontainer}>
-      <DropDown
-        label={'Select Vehicle'}
-        placeholder={'Select'}
-        textColor={
-          selectedVehicle ? colors?.text?.dimBlack : colors?.text?.grey
-        }
-        onValueChange={(value, id) => {
-          setSelectedVehicle(id);
-          setFieldValue('vehicleId', id);
-        }}
-        dynamicData={Vehicles}
-        errors={touched.vehicleId && errors.vehicleId}
-        initialValue={selectedVehicle}
-      />
-      <TouchableOpacity
+
+      {/* <TouchableOpacity
         style={styles.addmore}
         onPress={() => navigation.navigate(routes.main.addVehicles)}>
         <MyIcons name={'add'} size={15} />
@@ -327,7 +290,7 @@ const AddMaintenanceRecord = props => {
           color={colors.text.red}
           style={{ marginTop: 5 }}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <InputField
         label="Select Location/Shop"
@@ -336,78 +299,6 @@ const AddMaintenanceRecord = props => {
         value={values.location}
         onChangeText={text => setFieldValue('location', text)}
         errors={touched.location && errors.location}
-      />
-      {/* <DropDown
-        label={'Select Store / Shop'}
-        placeholder={'Select'}
-        textColor={selectedStore ? colors?.text?.dimBlack : colors?.text?.grey}
-        onValueChange={(value, id) => {
-          setSelectedStore(id);
-          setFieldValue('storeId', id);
-          setSelectedMechanic('');
-          // setTimeout(() => selectedStoreRefetch(), 100);
-        }}
-        dynamicData={Stores}
-        errors={touched.storeId && errors.storeId}
-      /> */}
-      {/* <TouchableOpacity
-        style={styles.addmore}
-        onPress={() => navigation.navigate(routes.main.addastore)}>
-        <MyIcons name={'add'} size={15} />
-        <CustomText
-          text="Add New Store / Shop"
-          font={fonts.benzin.regular}
-          size={font.medium}
-          color={colors.text.red}
-          style={{marginTop: 5}}
-        />
-      </TouchableOpacity> */}
-      <CustomDatePicker
-        label="Enter Date"
-        date={values.enterDate ? new Date(values.enterDate) : null}
-        onDateChange={date => setFieldValue('enterDate', date.toISOString())}
-        errors={touched.enterDate && errors.enterDate}
-      />
-      <View style={{ height: 1 }} />
-
-      {/* <DropDown
-        label={'Select Mechanic / Attendant Name'}
-        placeholder={'Select'}
-        textColor={
-          selectedMechanic ? colors?.text?.dimBlack : colors?.text?.grey
-        }
-        onValueChange={(value, id) => {
-          setSelectedMechanic(id);
-          setFieldValue('workerId', id);
-        }}
-        dynamicData={Mechanics}
-        errors={touched.workerId && errors.workerId}
-      /> */}
-      {/* <TouchableOpacity
-        style={styles.addmore}
-        onPress={() =>
-          navigation.navigate(routes.main.addnewmechanic, {
-            storeId: selectedStore,
-            returnTo: routes.main.addmaintenancerecord,
-          })
-        }>
-        <MyIcons name={'add'} size={15} />
-        <CustomText
-          text="Add New Mechanic / Attendant Name"
-          font={fonts.benzin.regular}
-          size={font.medium}
-          color={colors.text.red}
-          style={{ marginTop: 5 }}
-        />
-      </TouchableOpacity> */}
-      <InputField
-        label="Brief Description"
-        multiline={true}
-        placeholder="Enter Description"
-        keyboardType={'default'}
-        value={values.description}
-        onChangeText={text => setFieldValue('description', text)}
-        errors={touched.description && errors.description}
       />
     </View>
   );
@@ -439,95 +330,15 @@ const AddMaintenanceRecord = props => {
 
     return (
       <View style={styles.barcontainer1}>
-        <CustomText
+        {/* <CustomText
           text="Maintenance Details"
           size={font.xxlarge}
           font={fonts.clash.regular}
           color={colors.text.dimBlack}
           style={{ marginBottom: 10, marginLeft: 10 }}
-        />
-
-        {/* {selectedAutoparts.length > 0 && (
-          <View style={{ marginBottom: 10 }}>
-            <CustomText
-              text="Select Component/Part replaced or repaired"
-              size={font.medium}
-              font={fonts.clash.regular}
-              color={colors.text.dimBlack}
-              style={{ marginBottom: 5 }}
-            />
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
-              {selectedAutoparts.map((part, index) => (
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: colors.theme.secondary,
-                    paddingHorizontal: 10,
-                    paddingVertical: 5,
-                    borderRadius: 5,
-                    marginRight: 5,
-                    marginBottom: 5,
-                  }}>
-                  <CustomText
-                    text={part.value}
-                    size={font.small}
-                    color={colors.text.white}
-                    style={{ marginRight: 5 }}
-                  />
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSelectedAutoparts(prev =>
-                        prev.filter(p => p.id !== part.id),
-                      );
-                    }}>
-                    <MyIcons name="closed" size={15} />
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
-
-        <DropDown
-          label={'Select Component/Part replaced or repaired'}
-          placeholder={'Select'}
-          textColor={
-            selectedAutopart ? colors?.text?.dimBlack : colors?.text?.grey
-          }
-          onValueChange={(value, id) => {
-            setSelectedAutopart(id);
-            if (!selectedAutoparts.some(part => part.id === id)) {
-              setSelectedAutoparts(prev => [
-                ...prev,
-                { id, value, key: prev.length },
-              ]);
-            }
-            setSelectedAutopart('');
-          }}
-          dynamicData={Autoparts}
         /> */}
-        {/* <TouchableOpacity
-          style={styles.addmore}
-          onPress={() => navigation.navigate(routes.main.addmaintenancerecord)}>
-          <MyIcons name={'add'} size={15} />
-          <CustomText
-            text="Add New Autopart"
-            font={fonts.benzin.regular}
-            size={font.medium}
-            color={colors.text.red}
-            style={{ marginTop: 5 }}
-          />
-        </TouchableOpacity> */}
-        {/* <InputField
-          label="New Component / Part Brand Name"
-          placeholder="Enter Component / Part Brand Name"
-          keyboardType={'default'}
-          value={values.partBrandName}
-          onChangeText={text => setFieldValue('partBrandName', text)}
-          errors={touched.partBrandName && errors.partBrandName}
-        /> */}
+
+       
         <InputField
           label="Component/Part replaced or repaired"
           placeholder="Enter Component/Part replaced or repaired"
@@ -630,58 +441,6 @@ const AddMaintenanceRecord = props => {
               style={{ marginBottom: 10 }}
             />
           )}
-          {/* {values.partDetails.map((part, index) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 10,
-              }}>
-              <View style={{ flex: 1, marginRight: 10 }}>
-                <InputField
-                  label={`Part Number ${index + 1}`}
-                  placeholder="Enter Part Number"
-                  keyboardType={'default'}
-                  value={part.partNum}
-                  onChangeText={text =>
-                    setFieldValue(`partDetails[${index}].partNum`, text)
-                  }
-                  errors={
-                    touched.partDetails?.[index]?.partNum &&
-                    errors.partDetails?.[index]?.partNum
-                  }
-                />
-                <InputField
-                  label={`Part Description ${index + 1}`}
-                  placeholder="Enter Part Description"
-                  keyboardType={'default'}
-                  value={part.partDescription}
-                  onChangeText={text =>
-                    setFieldValue(`partDetails[${index}].partDescription`, text)
-                  }
-                  errors={
-                    touched.partDetails?.[index]?.partDescription &&
-                    errors.partDetails?.[index]?.partDescription
-                  }
-                  style={{ marginTop: 10 }}
-                />
-              </View>
-              <TouchableOpacity
-                onPress={() => removePartDetail(index)}
-                style={{ padding: 10 }}>
-                <MyIcons name="closed" size={15} />
-              </TouchableOpacity>
-            </View>
-          ))}
-          {errors.partDetails && typeof errors.partDetails === 'string' && (
-            <CustomText
-              text={errors.partDetails}
-              color={colors.text.red}
-              size={font.small}
-              style={{ marginBottom: 10 }}
-            />
-          )} */}
           <TouchableOpacity style={styles.addmore} onPress={addPartDetail}>
             <MyIcons name={'add'} size={15} />
             <CustomText
@@ -813,7 +572,7 @@ const AddMaintenanceRecord = props => {
         ) : (
           <MainButton
             style={styles.submitButton}
-            title="Add Record"
+            title="Add Part"
             disabled={isTaskSuccess}
             onPress={handleSubmit}
           />
@@ -830,13 +589,9 @@ const AddMaintenanceRecord = props => {
           innerRef={formikRef}
           initialValues={{
             vehicleId: '',
-            // storeId: '',
-            // workerId: '',
             serviceDate: '',
             partBrandName: '',
             carMileage: '',
-            condition: 'NEW',
-            partDetails: [{ partNum: '', partDescription: '' }],
             partsCost: '',
             laborCost: '',
             warranty: 'NO',

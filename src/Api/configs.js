@@ -1,5 +1,5 @@
-export const baseUrl = 'https://react.customdev.solutions:3056/api';
-// export const baseUrl = 'https://ldn26m62-3056.inc1.devtunnels.ms/api';
+// export const baseUrl = 'https://react.customdev.solutions:3056/api';
+export const baseUrl = 'http://66.29.143.67/api';
 
 // export const baseUrl = 'https://ea72-204-157-158-10.ngrok-free.app/api';
 export const imageServer = 'https://react.customdev.solutions:3056/Uploads/';
@@ -198,42 +198,14 @@ export const endpoints = {
       url: 'vet/addVet',
       method: 'POST',
     },
-    // fectchVehicleByUser: {
-    //   url: '/vehicle/getVehicleByUser',
-    //   method: 'GET',
-    // },
-    // fetchVehicleById: {
-    //   url: '/vehicle/getVehicleById',
-    //   method: 'GET',
-    // },
-    // edit: {
-    //   url: '/vehicle/updateVehicle',
-    //   method: 'PUT',
-    // },
   },
   otherRecords: {
-    // add: {
-    //   url: 'vet/addVet',
-    //   method: 'POST',
-    // },
     fetchchOtherRecordsByUser: {
       url: '/history/getOtherRecords',
       method: 'GET',
     },
-    // fetchVehicleById: {
-    //   url: '/vehicle/getVehicleById',
-    //   method: 'GET',
-    // },
-    // edit: {
-    //   url: '/vehicle/updateVehicle',
-    //   method: 'PUT',
-    // },
   },
   records: {
-    // add: {
-    //   url: 'vet/addVet',
-    //   method: 'POST',
-    // },
     fetchchRecordsByUser: {
       url: '/history/getRecords',
       method: 'GET',
@@ -319,6 +291,16 @@ export const endpoints = {
       method: 'DELETE',
     },
   },
+    part: {
+    add: {
+      url: '/part/add',
+      method: 'POST',
+    },
+    getPart: {
+      url: '/part/getAll',
+      method: 'GET',
+    },
+  },
 };
 
 export const reducers = {
@@ -328,6 +310,7 @@ export const reducers = {
     journalEntries: 'journalEntriesApi',
     profile: 'profileApi',
     vehicle: 'vehicleApi',
+    part:'partApi',
     vehicleTypes: 'vehicleTypesApi',
     contactUs: 'contactUsApi',
     worker: 'workerApi',

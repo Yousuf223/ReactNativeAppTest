@@ -32,7 +32,7 @@ const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: '#EDEDED',
+    background: '#FFF',
   },
 };
 
