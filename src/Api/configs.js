@@ -1,8 +1,8 @@
 // export const baseUrl = 'https://react.customdev.solutions:3056/api';
 export const baseUrl = 'http://66.29.143.67/api';
 
-// export const baseUrl = 'https://ea72-204-157-158-10.ngrok-free.app/api';
-export const imageServer = 'https://react.customdev.solutions:3056/Uploads/';
+// export const baseUrl = 'https://clsd39mb-3056.uks1.devtunnels.ms/api';
+export const imageServer = 'http://66.29.143.67/Uploads/';
 
 export const endpoints = {
   auth: {

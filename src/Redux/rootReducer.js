@@ -24,6 +24,7 @@ import {categoryApi} from '../Api/categoryApiSlice';
 import {customRecordsApi} from '../Api/customRecordsApiSlice';
 import {draftsApi} from '../Api/draftsApiSlice';
 import {vehicleTypesApi} from '../Api/vehicleTypesApiSlice';
+import { partApi } from '../Api/partApi';
 export const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [resetApi.reducerPath]: resetApi.reducer,
@@ -50,4 +51,5 @@ export const rootReducer = combineReducers({
   [customRecordsApi.reducerPath]: customRecordsApi.reducer,
   [draftsApi.reducerPath]: draftsApi.reducer,
   [vehicleTypesApi.reducerPath]: vehicleTypesApi.reducer,
+  [partApi.reducerPath] : partApi.reducer,
 });

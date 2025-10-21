@@ -5,20 +5,20 @@ import CustomHeader from '../../../Components/CustomHeader';
 import CustomText from '../../../Components/wrappers/Text/CustomText';
 import { spacing } from '../../../theme/styles';
 import { colors } from '../../../theme/colors';
-import { useFetchMaintenanceAutopartsByUserQuery } from '../../../Api/mainteinanceAutopartsApiSlice';
+import { useFetchPartByUserQuery } from '../../../Api/partApi';
 
 const VehicleMaintenanceDetails = (props) => {
     const { id } = props?.route?.params;
     const [payload, setPayload] = useState({ page: 1, limit: 1000, vehicleId: id })
-    const { data = [], isLoading, isError } = useFetchMaintenanceAutopartsByUserQuery(payload, { refetchOnMountOrArgChange: true, refetchOnFocus: true }); // Assuming id is vehicleId
+    const { data = [], isLoading, isError } = useFetchPartByUserQuery(payload, { refetchOnMountOrArgChange: true, refetchOnFocus: true }); // Assuming id is vehicleId
     console.log('datadatadata', data);
 
-    const maintenanceRecords = data?.docs || []// Filter by vehicleId
+    const maintenanceRecords = data || []// Filter by vehicleId
     console.log('maintenanceRecords', maintenanceRecords);
 
     return (
         <>
-            <CustomHeader title="Vehicle Maintenance Details" />
+            <CustomHeader title="Part Detail" />
             <ScrollView contentContainerStyle={styles.container}>
 
                 {isLoading && (
@@ -35,41 +35,25 @@ const VehicleMaintenanceDetails = (props) => {
 
                 {maintenanceRecords?.length > 0 ? (
                     <View style={styles.dataContainer}>
-                        {maintenanceRecords?.map((item, index) => (
+                        {maintenanceRecords?.map((item) => (
                             <View key={item._id} style={styles.itemContainer}>
                                 <CustomText
-                                    text={`Vehicle: ${item.vehicle?.vehicleDetails?.make && item.vehicle?.vehicleDetails?.model
-                                            ? `${item.vehicle.vehicleDetails.make} ${item.vehicle.vehicleDetails.model}`
-                                            : 'N/A'
-                                        }`}
+                                    text={`Part Name: ${item.name || 'N/A'}`}
                                     color={colors.text.black}
                                     style={styles.itemText}
                                 />
                                 <CustomText
-                                    text={`Part Brand: ${item.partBrand || 'N/A'}`}
-                                    color={colors.text.black}
-                                    style={styles.itemText}
-                                />
-                                <CustomText
-                                    text={`Enter Date: ${item.serviceDate
-                                            ? new Date(item.serviceDate).toLocaleDateString()
-                                            : 'N/A'
-                                        }`}
+                                    text={`For What: ${item.forWhat || 'N/A'}`}
                                     color={colors.text.grey}
                                     style={styles.itemText}
                                 />
                                 <CustomText
-                                    text={`Description: ${item.description || 'N/A'}`}
+                                    text={`Store: ${item.storeName || 'N/A'}, ${item.storeAddress || ''}`}
                                     color={colors.text.grey}
                                     style={styles.itemText}
                                 />
                                 <CustomText
-                                    text={`Total Cost: $${item.totalMaintenanceCost || '0'}`}
-                                    color={colors.text.grey}
-                                    style={styles.itemText}
-                                />
-                                <CustomText
-                                    text={`Mileage: ${item.currentMileage || 'N/A'} miles`}
+                                    text={`Price: $${item.price || '0'}`}
                                     color={colors.text.grey}
                                     style={styles.itemText}
                                 />
@@ -78,18 +62,15 @@ const VehicleMaintenanceDetails = (props) => {
                                     color={colors.text.grey}
                                     style={styles.itemText}
                                 />
-                                {item.warranty === 'YES' && (
-                                    <CustomText
-                                        text={`Warranty Expiration: ${item.warrantyExpiration
-                                                ? new Date(item.warrantyExpiration).toLocaleDateString()
-                                                : 'N/A'
-                                            }`}
-                                        color={colors.text.grey}
-                                        style={styles.itemText}
-                                    />
-                                )}
+                                <CustomText
+                                    text={`Purchase Date: ${item.purchaseDate ? new Date(item.purchaseDate).toLocaleDateString() : 'N/A'
+                                        }`}
+                                    color={colors.text.grey}
+                                    style={styles.itemText}
+                                />
                             </View>
                         ))}
+
                     </View>
                 ) : (
                     !isLoading && (

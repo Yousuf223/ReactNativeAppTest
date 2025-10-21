@@ -18,7 +18,7 @@ export const partApi = createApi({
         };
       },
     }),
-    fetchVehicleByUser: builder.query({
+    fetchPartByUser: builder.query({
       query: body => {
         LOG('body', body);
         return {
@@ -61,7 +61,7 @@ export const partApi = createApi({
 
 export const {
   useAddMutation,
-  useFetchVehicleByUserQuery,
+  useFetchPartByUserQuery,
   useFetchVehicleByIdQuery,
   useEditMutation,
   useDeleteMutation,

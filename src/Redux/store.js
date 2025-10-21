@@ -36,6 +36,7 @@ import {categoryApi} from '../Api/categoryApiSlice';
 import {customRecordsApi} from '../Api/customRecordsApiSlice';
 import {draftsApi} from '../Api/draftsApiSlice';
 import {vehicleTypesApi} from '../Api/vehicleTypesApiSlice';
+import { partApi } from '../Api/partApi';
 const persistConfig = {
   key: 'root',
   storage: reduxStorage,
@@ -76,6 +77,7 @@ export const store = configureStore({
       customRecordsApi.middleware,
       draftsApi.middleware,
       vehicleTypesApi.middleware,
+      partApi.middleware,
     ),
 });
 

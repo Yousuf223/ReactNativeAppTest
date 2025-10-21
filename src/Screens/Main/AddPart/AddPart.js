@@ -35,30 +35,33 @@ const partValidation = Yup.object().shape({
   receiptImage: Yup.mixed().required('Receipt image required'),
 });
 
-const AddPart = ({ navigation }) => {
+const AddPart = ({ navigation ,route}) => {
   const [add, { isLoading }] = useAddMutation();
   const [isModalVisible, setModalVisible] = useState(false);
+  const vehicleId = route.params?.vehicleIdPrefilled
+  console.log('vehicleIdvehicleId',vehicleId)
   const handleSubmitForm = async values => {
-    const payload = {
-      name: values.name,
-      forWhat: values.forWhat,
-      price: values.price,
-      storeName: values.storeName,
-      storeAddress: values.storeAddress,
-      warranty: values.warranty,
-      purchaseDate: values.purchaseDate,
-      receiptImage: values.receiptImage,
-    };
+const payload = {
+    vehicleId:vehicleId, 
+    name: values.name,
+    forWhat: values.forWhat,
+    price: values.price,
+    storeName: values.storeName,
+    storeAddress: values.storeAddress,
+    warranty: values.warranty,
+    purchaseDate: values.purchaseDate,
+    // gallery: values.receiptImage,
+  };
 
-    LOG('Add Part Payload:', payload);
+  LOG('Add Part Payload:', payload);
 
-    const response = await executeApiRequest({
-      apiCallFunction: add,
-      body: payload,
-      formData: true,
-      toast: true,
-      timeout: 30000,
-    });
+  const response = await executeApiRequest({
+    apiCallFunction: add,
+    body: payload,
+    formData: true,
+    toast: true,
+    timeout: 30000,
+  });
 
     if (response) {
       LOG('Part Added Successfully:', response);

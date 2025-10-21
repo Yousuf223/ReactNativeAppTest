@@ -706,7 +706,7 @@ const VehicleDetails = ({ route, navigation }) => {
 
 
           <MainButton
-            title={'Vehicle Maintenance Details'}
+            title={'Part Details'}
             onPress={() => navigation.navigate(routes.main.vehicleMaintenanceDetails, { id: vehicle?._id })}
             style={{ alignSelf: 'center', marginTop: spacing.large, marginBottom: spacing.large }}
           />
