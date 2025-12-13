@@ -23,6 +23,7 @@ import { vh, vw } from '../../../theme/units';
 import { useFetchVehicleTypesQuery } from '../../../Api/vehicleTypesApiSlice';
 import { LOG } from '../../../Utils/helperFunction';
 import { imageServer } from '../../../Api/configs';
+import FastImage from 'react-native-fast-image';
 
 const AddVehicles = () => {
   const navigation = useNavigation();
@@ -64,6 +65,7 @@ console.log('vehiclevehiclevehiclevehicle',data)
         contentContainerStyle={styles.scrollContent}>
         <View style={styles.container}>
           {data?.map((vehicle, index) => {
+            console.log('imageServer + vehicle?.image ',imageServer + vehicle?.image )
             return (
               <TouchableOpacity
                 activeOpacity={0.7}
@@ -84,11 +86,11 @@ console.log('vehiclevehiclevehiclevehicle',data)
                   />
                   {/* <View style={vehicle?.vehicleStyle}> */}
                     {/* <MyIcons name={vehicle?.image} size={vehicle?.size} /> */}
-                    <Image
+                    <FastImage
                       source={{ uri: imageServer + vehicle?.image }}
                       // style={{ height: vehicle.name == "ATV/UTV" ? vh * 32 : vehicle.name == "Semi Tractor" ? vh * 34 : vh * 35, width: vehicle.name == "ATV/UTV" ? vh * 32 :vehicle.name == "Semi Tractor" ? vh * 34 : vh * 35, marginRight: 16 }}
 
-                      style={{height:vh*34, width:vh*34 }}
+                      style={{height:vh*22, width:vh*22,marginTop:20 }}
                       resizeMode="contain"
                     />
                   {/* </View> */}
@@ -139,7 +141,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     position: 'relative',
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
+    justifyContent:"center",
+    alignItems:"center"
+    // justifyContent: 'flex-end',
+    // flexDirection: 'row',
   }
 });

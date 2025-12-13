@@ -21,7 +21,7 @@ import {loginValidationSchema} from '../../../Validations/authValidations';
 import styles from './styles'; // Import styles from styles.js
 import {LOG, makeApiCall} from '../../../Utils/helperFunction';
 import {useLoginMutation} from '../../../Api/authApiSlice';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -46,7 +46,6 @@ const LoginScreen = () => {
   );
   const navigateToSignUp = () => navigation.navigate(routes.auth.signup);
   const handleLogin = async data => {
-    LOG('Login Data >>>', data);
     Keyboard.dismiss();
     await makeApiCall(login, data);
 
@@ -60,8 +59,7 @@ const LoginScreen = () => {
     navigation.navigate(routes.auth.forgot);
   return (
     <Background>
-      <View style={layout.flex}>
-        <Container
+    <Container
           keyboardAware={true}
           keyboardHandled={'handled'}
           contentContainerStyle={styles.mainContentContainer}>
@@ -166,8 +164,8 @@ const LoginScreen = () => {
             </Formik>
           </View>
         </Container>
-      </View>
     </Background>
+
   );
 };
 export default LoginScreen;

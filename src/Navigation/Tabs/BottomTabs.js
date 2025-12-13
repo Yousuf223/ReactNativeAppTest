@@ -24,9 +24,9 @@ export const BottomTabs = () => {
       tabBar={props => <TabBar {...props} />}
       initialRouteName={routes?.tab?.vehicles}>
       <Tab.Screen name={routes?.tab?.vehicles} component={Vehicle} />
-      <Tab.Screen name={routes?.tab?.records} component={Records} />
+      {/* <Tab.Screen name={routes?.tab?.records} component={Records} /> */}
       <Tab.Screen name={routes.tab.addrecords} component={AddRecord} />
-      <Tab.Screen name={routes?.tab?.otherrecord} component={OtherRecords} />
+      {/* <Tab.Screen name={routes?.tab?.otherrecord} component={OtherRecords} /> */}
       <Tab.Screen name={routes?.tab?.home} component={Home} />
     </Tab.Navigator>
 

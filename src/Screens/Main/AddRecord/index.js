@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, View } from 'react-native';
+import { Alert, FlatList, Text, View } from 'react-native';
 import { useFetchCategoriesQuery, useDeleteMutation, categoryApi } from '../../../Api/categoryApiSlice';
 import { appImages } from '../../../Assets/Images';
 import CustomCard from '../../../Components/CustomCard';
@@ -15,6 +15,7 @@ import { imageServer } from '../../../Api/configs';
 import ModalComponent from '../../../Components/ModalComponent';
 import { useDispatch } from 'react-redux';
 import { executeApiRequest } from '../../../Api/methods/method';
+import { colors } from '../../../theme/colors';
 const AddRecord = () => {
   const [customData, setCustomData] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -35,9 +36,7 @@ const AddRecord = () => {
     { isLoading: deleteLoading, isError: deleteIsError, error: deleteError },
   ] = useDeleteMutation();
 
-  LOG('customData', customData);
 
-  LOG('data-data', data);
 
   useEffect(() => {
     if (data) {
@@ -81,6 +80,7 @@ const AddRecord = () => {
 
   return (
     <>
+    <Text style={{textAlign:"center",top:'5%',color:colors.theme.black,fontWeight:'600',fontSize:13}}>PARTS LOGGER</Text>
       <CustomHeader routeName={routes.tab.addrecords} />
 
       <FlatList

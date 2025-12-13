@@ -1,4 +1,4 @@
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
 import styles from './styles';
@@ -16,7 +16,7 @@ const MainButton = ({
   textStyle,
   disabled,
   icon,
-  hideIcon,
+  hideIcon = false,
 }) => {
   return (
     <TouchableOpacity
@@ -26,7 +26,7 @@ const MainButton = ({
       {icon ? (
         <MyIcons name={'backIcon'} />
       ) : (
-        <>
+        <View style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center",gap:10}}>
           <CustomText
             text={title}
             style={[styles.textStyle, textStyle]}
@@ -40,7 +40,7 @@ const MainButton = ({
               return <Feather name={'arrow-right'} color="#ffffff05" size={vh * 2} />;
             }
           })()}
-        </>
+        </View>
       )}
     </TouchableOpacity>
   );

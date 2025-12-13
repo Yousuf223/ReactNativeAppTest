@@ -9,7 +9,7 @@ import { colors } from '../../../theme/colors';
 import CustomText from '../../../Components/wrappers/Text/CustomText';
 import fonts from '../../../Assets/fonts';
 import MyIcons from '../../../Components/MyIcons';
-import { MainButton } from '../../../Components/Buttons/MainButton';
+import { MainButton, MainButtonWithGradient } from '../../../Components/Buttons/MainButton';
 import {
   useFetchPaymentByUserIDQuery,
   useFetchPaymentByUserQuery,
@@ -22,7 +22,7 @@ import { useAddMutation } from '../../../Api/vehiclesApiSlice';
 const { width, height } = Dimensions?.get('screen');
 
 
-const SubscriptionPlan = ({ navigation,route }) => {
+const SubscriptionPlan = ({ navigation, route }) => {
   const { data, isLoading, isFetching, error, refetch } =
     useFetchPaymentByUserQuery({ refetchOnMountOrArgChange: true });
 
@@ -35,7 +35,7 @@ const SubscriptionPlan = ({ navigation,route }) => {
   } = useFetchPaymentByUserIDQuery();
   const { subscriptionId, payload, from } = route.params || {};
   const [add] = useAddMutation();
-console.log('payload',payload)
+  console.log('payload', payload)
   const handlePaymentSuccess = async () => {
     try {
       // 1️⃣ Mark payment as done
@@ -50,7 +50,7 @@ console.log('payload',payload)
         });
 
         if (response) {
-        navigation?.pop(2)
+          navigation?.pop(2)
         }
       } else {
         // Otherwise just go back to home or confirmation
@@ -91,7 +91,14 @@ console.log('payload',payload)
           }}
         />
       </View>
-
+      <MainButtonWithGradient
+        title={'15 days free trial'}
+        onPress={handlePaymentSuccess}
+        style={{
+          width: vw * 50, alignSelf: 'start', marginLeft: 30,
+          marginVertical: 10
+        }}
+      />
       {isLoading && <ActivityLoader color={colors.theme.secondary} />}
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -148,7 +155,7 @@ console.log('payload',payload)
                       style={{ marginTop: vh * 1 }}
                     />
                     <CustomText
-                      text={`Add ${item?.vehicleLimit} vehicles, their parts and repair`}
+                      text={`Add ${item?.planName == 'Gold' ? 'UnLimited' : item?.vehicleLimit} vehicles, their parts and repair`}
                       size={font.medium}
                       font={fonts?.benzin?.regular}
                       color={colors?.text?.red}
@@ -215,6 +222,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.large,
     alignItems: 'center',
     paddingHorizontal: width * 0.07,
+
   },
   cardContainer: {
     padding: vh * 2,

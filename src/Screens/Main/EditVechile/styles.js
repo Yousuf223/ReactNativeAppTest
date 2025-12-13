@@ -12,7 +12,7 @@ import {vh} from '../../../theme/units';
   },
   detailContainer: {
     width: '100%',
-    padding: spacing?.xlarge,
+    paddingHorizontal: spacing?.xlarge,
     
     // borderWidth: 1,
     // borderColor: colors?.theme?.border,

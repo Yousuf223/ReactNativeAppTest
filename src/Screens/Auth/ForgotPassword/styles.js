@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     marginTop: spacing.small,
+    
   },
 });
 export default styles;

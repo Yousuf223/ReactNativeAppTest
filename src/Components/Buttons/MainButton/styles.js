@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
     gap: spacing?.small,
   },
   textStyle: {
-    fontSize: font.medium,
-    color: colors.text.white,
+    fontSize: 13,
+    color: colors.text.white
   },
 });
 export default styles;

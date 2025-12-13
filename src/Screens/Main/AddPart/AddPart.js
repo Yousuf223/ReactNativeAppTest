@@ -20,51 +20,49 @@ import routes from '../../../Navigation/routes';
 import { styles } from './styles';
 import { LOG } from '../../../Utils/helperFunction';
 
-// ✅ Validation Schema
+
 const partValidation = Yup.object().shape({
   name: Yup.string().required('Part name is required'),
-  forWhat: Yup.string().required('Please specify what this part is for'),
-  price: Yup.number()
-    .typeError('Price must be a number')
-    .positive('Invalid price')
-    .required('Price is required'),
-  storeName: Yup.string().required('Store name is required'),
-  storeAddress: Yup.string().required('Store address is required'),
-  warranty: Yup.string().required('Warranty info required'),
-  purchaseDate: Yup.date().required('Purchase date is required'),
-  receiptImage: Yup.mixed().required('Receipt image required'),
+  // forWhat: Yup.string().required('Please specify what this part is for'),
+  // price: Yup.number()
+  //   .typeError('Price must be a number')
+  //   .positive('Invalid price')
+  //   .required('Price is required'),
+  // storeName: Yup.string().required('Store name is required'),
+  // storeAddress: Yup.string().required('Store address is required'),
+  // warranty: Yup.string().required('Warranty info required'),
+  // purchaseDate: Yup.date().required('Purchase date is required'),
+  // receiptImage: Yup.mixed().required('Receipt image required'),
 });
 
-const AddPart = ({ navigation ,route}) => {
+const AddPart = ({ navigation, route }) => {
   const [add, { isLoading }] = useAddMutation();
   const [isModalVisible, setModalVisible] = useState(false);
   const vehicleId = route.params?.vehicleIdPrefilled
-  console.log('vehicleIdvehicleId',vehicleId)
   const handleSubmitForm = async values => {
-const payload = {
-    vehicleId:vehicleId, 
-    name: values.name,
-    forWhat: values.forWhat,
-    price: values.price,
-    storeName: values.storeName,
-    storeAddress: values.storeAddress,
-    warranty: values.warranty,
-    purchaseDate: values.purchaseDate,
-    // gallery: values.receiptImage,
-  };
+    const payload = {
+      vehicleId: vehicleId,
+      name: values.name,
+      forWhat: values.forWhat,
+      price: values.price,
+      storeName: values.storeName,
+      storeAddress: values.storeAddress,
+      warranty: values.warranty,
+      purchaseDate: values.purchaseDate,
+      gallery: values.receiptImage,
+    };
 
-  LOG('Add Part Payload:', payload);
 
-  const response = await executeApiRequest({
-    apiCallFunction: add,
-    body: payload,
-    formData: true,
-    toast: true,
-    timeout: 30000,
-  });
+
+    const response = await executeApiRequest({
+      apiCallFunction: add,
+      body: payload,
+      formData: true,
+      toast: true,
+      timeout: 30000,
+    });
 
     if (response) {
-      LOG('Part Added Successfully:', response);
       setModalVisible(true);
       setTimeout(() => navigation.navigate(routes?.tab?.vehicles), 1000);
     }
@@ -114,7 +112,6 @@ const payload = {
 
                 <View style={{ alignItems: 'center', marginTop: vh * 4 }}>
                   <InputField
-                    required
                     label="Part Name"
                     placeholder="Enter Part Name"
                     onChangeText={handleChange('name')}
@@ -125,7 +122,7 @@ const payload = {
                   />
 
                   <InputField
-                    required
+                    // required
                     label="For What Vehicle"
                     placeholder="Enter Vehicle Name (e.g., Honda Accord)"
                     onChangeText={handleChange('forWhat')}
@@ -136,10 +133,9 @@ const payload = {
                   />
 
                   <InputField
-                    required
                     label="Price"
                     placeholder="Enter Price"
-                    keyboardType="numeric"
+                    keyboardType={'decimal-pad'}
                     onChangeText={handleChange('price')}
                     onBlur={handleBlur('price')}
                     value={values.price}
@@ -148,7 +144,6 @@ const payload = {
                   />
 
                   <InputField
-                    required
                     label="Store Name"
                     placeholder="Enter Store Name"
                     onChangeText={handleChange('storeName')}
@@ -159,7 +154,6 @@ const payload = {
                   />
 
                   <InputField
-                    required
                     label="Store Address"
                     placeholder="Enter Store Address"
                     onChangeText={handleChange('storeAddress')}
@@ -170,7 +164,6 @@ const payload = {
                   />
 
                   <InputField
-                    required
                     label="Warranty"
                     placeholder="Enter Warranty (e.g., One Year)"
                     onChangeText={handleChange('warranty')}
@@ -181,7 +174,7 @@ const payload = {
                   />
 
                   <CustomDatePicker
-                    dateStyle={{ width: vw * 80, marginBottom: vh * 5,backgroundColor:'#fff' }}
+                    dateStyle={{ width: vw * 80, marginBottom: vh * 5, backgroundColor: '#fff' }}
                     labelStyle={{ marginLeft: 20 }}
                     date={
                       values.purchaseDate
@@ -200,7 +193,7 @@ const payload = {
                     handleImage={img => setFieldValue('receiptImage', img)}
                     errors={touched.receiptImage && errors.receiptImage}
                   />
-                
+
 
                   {isLoading ? (
                     <ActivityLoader

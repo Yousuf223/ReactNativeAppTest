@@ -176,10 +176,21 @@ const VehicleDetails = ({ route, navigation }) => {
         maxWidth: 400,
         quality: 1,
       });
-      onImageChange([result], image.mime, 'photo'); // Wrap result in an array
+      onImageChange([result], image.mime, 'photo'); 
     });
   };
+console.log('vehiclevehicle',vehicle)
+const labelProps = {
+  color: colors.text.placeholder,
+  font: fonts.benzin.light,
+  size: font.medium,
+};
 
+const valueProps = {
+  color: colors.text.dimBlack,
+  font: fonts.benzin.regular,
+  size: font.medium,
+};
 
   return (
     <View style={styles.container}>
@@ -189,7 +200,7 @@ const VehicleDetails = ({ route, navigation }) => {
             position: 'absolute',
             right: 0,
             zIndex: 999,
-            top: 0,
+            top: 10,
             left: 0,
           }}>
           <CustomHeader
@@ -201,6 +212,14 @@ const VehicleDetails = ({ route, navigation }) => {
             }
           />
         </View>
+       
+            {/* <View style={styles.card}>
+        <Image
+          source={vehicle?.gallery[0]}
+          style={styles.image}
+          // resizeMode={Image.resizeMode.cover}
+        />
+      </View> */}
         {/* <Carousel
           data={
             vehicle?.gallery.length > 0
@@ -232,7 +251,7 @@ const VehicleDetails = ({ route, navigation }) => {
           position: 'relative',
           // top: 20,
           marginBottom: -20,
-          marginTop:'20%'
+          marginTop:'23%'
         }}>
         <View
           style={{
@@ -264,6 +283,41 @@ const VehicleDetails = ({ route, navigation }) => {
                 </TouchableOpacity>
               </View>
             )}
+
+                <MainButton
+            title={'Add Parts'}
+                   hideIcon={true}
+            onPress={() =>
+              navigation.navigate(routes.main.AddPart, {
+                vehicleIdPrefilled: vehicle?._id,
+              })
+            }
+            style={{ width:130,height:44,marginVertical:10 }}
+          />
+          <View style={{flexDirection:"row",justifyContent:'space-between'}}>
+           {deleteLoading ? (
+            <ActivityLoader
+              style={{ marginTop: spacing.large}}
+              color={colors.theme.secondary}
+            />
+          ) : (
+            <MainButton
+              title={'Delete Vehicle'}
+              onPress={handleDelete}
+              style={{ width:130,height:44}}
+              hideIcon={true}
+              
+            />
+            
+          )}
+          <MainButton
+            title={'Part Details'}
+            onPress={() => navigation.navigate(routes.main.vehicleMaintenanceDetails, { id: vehicle?._id })}
+            style={{width:123,height:44}}
+                   hideIcon={true}
+          />
+          </View>
+    
           <View style={styles.separator} />
 
           <View>
@@ -299,42 +353,21 @@ const VehicleDetails = ({ route, navigation }) => {
             </View>
 
             <View style={styles.row}>
-              <View style={styles.column}>
+             <View style={styles.column}>
                 <CustomText
-                  text="VIN"
+                  text="Has Turbo/Super Charger"
                   color={colors.text.placeholder}
                   font={fonts.benzin.light}
                   size={font.medium}
                 />
                 <CustomText
-                  text={vehicle?.vehicleDetails?.VIN}
+                  text={vehicle?.additionalDetails?.turboCharger ? 'Yes' : 'No'}
                   color={colors.text.dimBlack}
                   font={fonts.benzin.regular}
                   size={font.medium}
                 />
               </View>
-              <View style={styles.column}>
-                <CustomText
-                  text="Purchase Date"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.vehicleDetails?.purchaseDate
-                      ? formatDate(vehicle?.vehicleDetails?.purchaseDate)
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-            </View>
-
-            <View style={styles.row}>
-              <View style={styles.column}>
+            <View style={styles.column}>
                 <CustomText
                   text="Year"
                   color={colors.text.placeholder}
@@ -348,6 +381,10 @@ const VehicleDetails = ({ route, navigation }) => {
                   size={font.medium}
                 />
               </View>
+            </View>
+
+            <View style={styles.row}>
+         
               <View style={styles.column}>
                 <CustomText
                   text="Description"
@@ -362,191 +399,9 @@ const VehicleDetails = ({ route, navigation }) => {
                   size={font.medium}
                 />
               </View>
-            </View>
-          </View>
-
-          <View style={styles.separator} />
-          <CustomText
-            text={'Additional Details'}
-            color={colors.text.dimBlack}
-            font={fonts.clash.regular}
-            size={font.xxxlarge}
-          />
-          <View>
-            <View style={styles.row}>
-              <View style={styles.column}>
+                     <View style={styles.column}>
                 <CustomText
-                  text="Fuel"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.fuel
-                      ? vehicle?.additionalDetails?.fuel
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-              <View style={styles.column}>
-                <CustomText
-                  text="Drivetrain"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.driveTrain
-                      ? vehicle?.additionalDetails?.driveTrain
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-            </View>
-
-            <View style={styles.row}>
-              <View style={styles.column}>
-                <CustomText
-                  text="Cylinders"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.cylinders
-                      ? vehicle?.additionalDetails?.cylinders
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-              <View style={styles.column}>
-                <CustomText
-                  text="Has Turbo/Super Charger"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={vehicle?.additionalDetails?.turboCharger ? 'Yes' : 'No'}
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-            </View>
-
-            <View style={styles.row}>
-              <View style={styles.column}>
-                <CustomText
-                  text="Engine Size (L)"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.engineSize
-                      ? vehicle?.additionalDetails?.engineSize
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-              <View style={styles.column}>
-                <CustomText
-                  text="Engine Type"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.type
-                      ? vehicle?.additionalDetails?.type
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.column}>
-                <CustomText
-                  text="Recommended Engine Oil Type"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.engineOilType
-                      ? vehicle?.additionalDetails?.engineOilType
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-
-              <View style={styles.column}>
-                <CustomText
-                  text="Recommended Engine Coolant Type"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.engineCoolantType
-                      ? vehicle?.additionalDetails?.engineCoolantType
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.column}>
-                <CustomText
-                  text="Transmission Fuild Type"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.transmissionFluidType
-                      ? vehicle?.additionalDetails?.transmissionFluidType
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-
-              <View style={styles.column}>
-                <CustomText
-                  text="Transmission Type"
+                  text="Transmission"
                   color={colors.text.placeholder}
                   font={fonts.benzin.light}
                   size={font.medium}
@@ -562,19 +417,19 @@ const VehicleDetails = ({ route, navigation }) => {
                   size={font.medium}
                 />
               </View>
+             
             </View>
-            <View style={styles.row}>
-              <View style={styles.column}>
+               <View style={styles.column}>
                 <CustomText
-                  text="Transmission Speed"
+                  text="Engine Oil"
                   color={colors.text.placeholder}
                   font={fonts.benzin.light}
                   size={font.medium}
                 />
                 <CustomText
                   text={
-                    vehicle?.additionalDetails?.transmissionSpeed
-                      ? vehicle?.additionalDetails?.transmissionSpeed
+                    vehicle?.additionalDetails?.engineOilType
+                      ? vehicle?.additionalDetails?.engineOilType
                       : 'N/A'
                   }
                   color={colors.text.dimBlack}
@@ -582,134 +437,105 @@ const VehicleDetails = ({ route, navigation }) => {
                   size={font.medium}
                 />
               </View>
-
-              <View style={styles.column}>
-                <CustomText
-                  text="Drivetrain"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.driveTrain
-                      ? vehicle?.additionalDetails?.driveTrain
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.column}>
-                <CustomText
-                  text="Tire Size"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.tireSize
-                      ? vehicle?.additionalDetails?.tireSize
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-
-              <View style={styles.column}>
-                <CustomText
-                  text="Tire Pressure"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.tirePressure
-                      ? vehicle?.additionalDetails?.tirePressure
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.column}>
-                <CustomText
-                  text="Current Mileage"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.carMilage
-                      ? vehicle?.additionalDetails?.carMilage
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-              <View style={styles.column}>
-                <CustomText
-                  text="Note"
-                  color={colors.text.placeholder}
-                  font={fonts.benzin.light}
-                  size={font.medium}
-                />
-                <CustomText
-                  text={
-                    vehicle?.additionalDetails?.notes
-                      ? vehicle?.additionalDetails?.notes
-                      : 'N/A'
-                  }
-                  color={colors.text.dimBlack}
-                  font={fonts.benzin.regular}
-                  size={font.medium}
-                />
-              </View>
-            </View>
           </View>
-          <View style={styles.separator} />
-          <MainButton
-            title={'Add Parts'}
-            onPress={() =>
-              navigation.navigate(routes.main.AddPart, {
-                vehicleIdPrefilled: vehicle?._id,
-              })
-            }
-            style={{ alignSelf: 'center' }}
-          />
+   
+    
+       
+{vehicle?.vehicleType?.name === 'CAR / Motorcycle' && (
+  <>
+    <View style={styles.row}>
+      <View style={styles.column}>
+        <CustomText text="Fuel" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.fuel || 'N/A'} {...valueProps} />
+      </View>
 
-          {deleteLoading ? (
-            <ActivityLoader
-              style={{ marginTop: spacing.large}}
-              color={colors.theme.secondary}
-            />
-          ) : (
-            <MainButton
-              title={'Delete Vehicle'}
-              onPress={handleDelete}
-              style={{ alignSelf: 'center', marginTop: spacing.large }}
-            />
-          )}
+      <View style={styles.column}>
+        <CustomText text="Drivetrain" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.driveTrain || 'N/A'} {...valueProps} />
+      </View>
+    </View>
 
+    <View style={styles.row}>
+      <View style={styles.column}>
+        <CustomText text="Cylinders" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.cylinders || 'N/A'} {...valueProps} />
+      </View>
 
-          <MainButton
-            title={'Part Details'}
-            onPress={() => navigation.navigate(routes.main.vehicleMaintenanceDetails, { id: vehicle?._id })}
-            style={{ alignSelf: 'center', marginTop: spacing.large, marginBottom: spacing.large }}
-          />
+      <View style={styles.column}>
+        <CustomText text="Engine Size (L)" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.engineSize || 'N/A'} {...valueProps} />
+      </View>
+    </View>
+
+    <View style={styles.row}>
+      <View style={styles.column}>
+        <CustomText text="Tire Size" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.tireSize || 'N/A'} {...valueProps} />
+      </View>
+
+      <View style={styles.column}>
+        <CustomText text="Tire Pressure" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.tirePressure || 'N/A'} {...valueProps} />
+      </View>
+    </View>
+  </>
+)}
+
+     {vehicle?.vehicleType?.name === 'Semi Truck / Truck' && (
+  <>
+    <View style={styles.row}>
+      <View style={styles.column}>
+        <CustomText text="Engine" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.engine || 'N/A'} {...valueProps} />
+      </View>
+
+      <View style={styles.column}>
+        <CustomText text="Change Oil Every (Miles)" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.changeOilEvery || 'N/A'} {...valueProps} />
+      </View>
+    </View>
+
+    <View style={styles.row}>
+      <View style={styles.column}>
+        <CustomText text="Miles at Last Oil Change" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.mileage || 'N/A'} {...valueProps} />
+      </View>
+
+      <View style={styles.column}>
+        <CustomText text="Next Oil Change" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.nextOilChange || 'N/A'} {...valueProps} />
+      </View>
+    </View>
+  </>
+)}
+{['Heavy Equipment', 'Farm and Ranch', 'ATV /UTV / Boat'].includes(vehicle?.vehicleType?.name) && (
+  <>
+    <View style={styles.row}>
+      <View style={styles.column}>
+        <CustomText text="Type" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.type || 'N/A'} {...valueProps} />
+      </View>
+
+      <View style={styles.column}>
+        <CustomText text="Engine" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.engine || 'N/A'} {...valueProps} />
+      </View>
+    </View>
+
+    <View style={styles.row}>
+      <View style={styles.column}>
+        <CustomText text="Hours" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.hours || 'N/A'} {...valueProps} />
+      </View>
+
+      <View style={styles.column}>
+        <CustomText text="Next Oil Change (Hours)" {...labelProps} />
+        <CustomText text={vehicle?.additionalDetails?.nextHours || 'N/A'} {...valueProps} />
+      </View>
+    </View>
+  </>
+)}
+
         </View>
       </ScrollView>
     </View>

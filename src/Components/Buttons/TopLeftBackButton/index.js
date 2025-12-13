@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     borderWidth: 1,
     borderColor: '#E8E6EA',
-    marginTop:10
+    marginTop:25
   },
 });

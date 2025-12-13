@@ -11,6 +11,8 @@ import HeightCreation from '../../Screens/Auth/HeightCreation';
 import WeightCreation from '../../Screens/Auth/WeightCreation';
 import PaymentDetails from '../../Screens/Auth/PaymentDetails';
 import SubscriptionPlan from '../../Screens/Auth/SubscriptionPlan';
+import VerifyOtp from '../../Screens/Auth/VerifyOtp/VerifyOtp'
+import ResetPassword from '../../Screens/Auth/ResetPassword/ResetPassword'
 import {reduxStorage} from '../../Redux/mmkv';
 import {LOG} from '../../Utils/helperFunction';
 import WelcomeScreen from '../../Screens/Auth/WelcomeScreen'
@@ -53,6 +55,8 @@ const Auth = () => {
       <Stack.Screen name={routes.auth.weight} component={WeightCreation} />
       <Stack.Screen name={routes.auth.payment} component={PaymentDetails} />
       <Stack.Screen name={routes.auth.subscription} component={SubscriptionPlan}/>
+       <Stack.Screen name={routes.auth.otp} component={VerifyOtp}/>
+        <Stack.Screen name={routes.auth.resetPassword} component={ResetPassword}/>
     </Stack.Navigator>
   );
 };

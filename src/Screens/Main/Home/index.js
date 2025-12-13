@@ -112,7 +112,7 @@ const Home = ({ navigation, route }) => {
     return (
       <View>
         <CustomText
-          text={'This Month You Spend'}
+          text={'Total Spending'}
           size={font.xlarge}
           font={fonts?.benzin?.regular}
         />
@@ -151,7 +151,7 @@ const Home = ({ navigation, route }) => {
         <View style={styles.banner}>
           <View>
             <CustomText
-              text={'This Month You Spend'}
+              text={'Total Spending'}
               size={font.medium}
               font={fonts.benzin.semibold}
               color={colors.text.dimBlack}

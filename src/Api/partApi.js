@@ -20,9 +20,9 @@ export const partApi = createApi({
     }),
     fetchPartByUser: builder.query({
       query: body => {
-        LOG('body', body);
+        console.log('bodybody',body)
         return {
-          url: endpoints.part.getPart.url,
+          url: `${endpoints.part.getPart.url}/${body.vehicleId}`,
           method: endpoints.part.getPart.method,
         };
       },

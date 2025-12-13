@@ -1,5 +1,6 @@
 import {Image, StyleSheet,TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import FastImage from 'react-native-fast-image'
 
 
 const CustomIcon = props => {
@@ -14,6 +15,7 @@ const CustomIcon = props => {
     disabled,
     onPress,
   } = props;
+  console.log('FastImage',FastImage)
   return (
     <TouchableOpacity
       activeOpacity={0.1}
@@ -22,12 +24,14 @@ const CustomIcon = props => {
       style={[
         {height: size, width: size, backgroundColor: bgColor},
         customIconWrapper,
-      ]}>
-      <Image
+      ]}
+      >
+      <FastImage
         source={src}
         style={[styles?.img, customIconStyle]}
-        resizeMode={resizeMode}
-        tintColor={tintColor}
+        resizeMode='cover'
+        // resizeMode={resizeMode}
+        // tintColor={tintColor}
       />
     </TouchableOpacity>
   );
@@ -37,7 +41,8 @@ export default CustomIcon;
 
 const styles = StyleSheet.create({
   img: {
-    height: '100%',
-    width: '100%',
+    // height: '100%',
+    // width: '100%',
+    height:200
   },
 });

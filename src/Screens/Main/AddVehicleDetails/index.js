@@ -29,55 +29,49 @@ const AddVehicleDetails = ({ route, navigation }) => {
   const [add, { isLoading }] = useAddMutation();
   const item = vehicleDetails?.vehicleDetails;
   const [isModalVisible, setModalVisible] = useState(false);
-    const [AddPayment, setAddPayment] = useState(false);
+  const [AddPayment, setAddPayment] = useState(false);
 
-useEffect(() => {
-  const getPaymentStatus = async () => {
-    const value = await AsyncStorage.getItem('AddPayment');
-    setAddPayment(value === 'true'); // store boolean
-  };
-  getPaymentStatus();
-}, []);
+  useEffect(() => {
+    const getPaymentStatus = async () => {
+      const value = await AsyncStorage.getItem('AddPayment');
+      setAddPayment(value === 'true');
+    };
+    getPaymentStatus();
+  }, []);
 
   const { data: vehicleTypes } = useFetchVehicleTypesQuery();
 
-  // form submit
-const handleSubmitForm = async values => {
-  LOG('valuesGallery', values?.gallery);
-  let payload = {
-    ...values,
-    hasTurboCharger: values?.hasTurboCharger ? true : false,
-    vehicleType: item?._id,
+  const handleSubmitForm = async values => {
+    let payload = {
+      ...values,
+      hasTurboCharger: values?.hasTurboCharger ? true : false,
+      vehicleType: item?._id,
+    };
+
+
+
+    if (!AddPayment) {
+      navigation.navigate(routes.main.subscriptionplan, {
+        payload: payload,
+        from: 'AddVehicleDetails',
+      });
+      return;
+    }
+
+    const response = await executeApiRequest({
+      apiCallFunction: add,
+      body: payload,
+      formData: true,
+      toast: true,
+      timeout: 30000,
+    });
+    if (response) {
+      setModalVisible(true);
+      setTimeout(() => navigation?.pop(2), 1000);
+    }
   };
 
 
-
-  // 🔹 Check AddPayment status
-  if (!AddPayment) {
-    navigation.navigate(routes.main.subscriptionplan, {
-      payload:payload, 
-      from: 'AddVehicleDetails',
-    });
-    return; 
-  }
-
-  // 🔹 Otherwise, proceed to add vehicle normally
-  const response = await executeApiRequest({
-    apiCallFunction: add,
-    body: payload,
-    formData: true,
-    toast: true,
-    timeout: 30000,
-  });
-
-  LOG('Vehicle Add Success:', response);
-  if (response) {
-    setModalVisible(true);
-    setTimeout(() => navigation?.pop(2), 1000);
-  }
-};
-
-console.log('item?.nameitem?.name',item?.name)
   return (
     <>
       <CustomHeader title={item?.name} />
@@ -106,6 +100,9 @@ console.log('item?.nameitem?.name',item?.name)
             gallery: [],
             cylinders: '',
             driveTrain: '',
+            turboCharger: false,
+            transmissionType: "",
+            engineOilType: ""
           }}
           validationSchema={vehicleValidation}
           onSubmit={handleSubmitForm}>
@@ -122,19 +119,9 @@ console.log('item?.nameitem?.name',item?.name)
               <View
                 style={[
                   styles.detailContainer,
-                  // { paddingHorizontal: spacing.large },
                 ]}>
                 <View style={{ alignItems: 'center', marginTop: vh * 4 }}>
-                  {/* Always show category and make */}
-                  <InputField
-                    label="Vehicle Category"
-                    placeholder="Enter Vehicle Category"
-                    required
-                    value={values.vehicleType}
-                    editable={false}
-                    style={{ width: vw * 85, marginBottom: vh * 5 }}
-                    errors={touched.vehicleType && errors.vehicleType}
-                  />
+
 
                   <InputField
                     required
@@ -156,15 +143,14 @@ console.log('item?.nameitem?.name',item?.name)
                         value={values.model}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
-                      <DropDown
+                      <InputField
                         label="Year"
-                        placeholder="Select"
-                        onValueChange={value =>
-                          setFieldValue('year', value?.value)
-                        }
-                         dynamicData={year} style={{ width: vw * 85, marginBottom: vh * 5 }}
-                         textColor={ values.year ? colors?.text?.dimBlack : colors?.text?.grey }  
-                        errors={touched.year && errors.year}
+                        placeholder="Year"
+                        onChangeText={handleChange('year')}
+                        onBlur={handleBlur('year')}
+                        value={values.year}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        keyboardType="decimal-pad"
                       />
                       <InputField
                         label="Engine"
@@ -239,8 +225,8 @@ console.log('item?.nameitem?.name',item?.name)
                           { key: '2', value: 'Flatbed Truck' },
                           { key: '3', value: 'Dump Truck' },
                         ]}
-                    style={{ width: vw * 85, marginBottom: vh * 5 }}
-                         textColor={ values.year ? colors?.text?.dimBlack : colors?.text?.grey }  
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        textColor={values.year ? colors?.text?.dimBlack : colors?.text?.grey}
                         errors={touched.year && errors.year}
                       />
                       <InputField
@@ -251,15 +237,14 @@ console.log('item?.nameitem?.name',item?.name)
                         value={values.model}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
-                      <DropDown
+                      <InputField
                         label="Year"
-                        placeholder="Select"
-                        onValueChange={value =>
-                          setFieldValue('year', value?.value)
-                        }
-                         dynamicData={year} style={{ width: vw * 85, marginBottom: vh * 5 }}
-                         textColor={ values.year ? colors?.text?.dimBlack : colors?.text?.grey }  
-                        errors={touched.year && errors.year}
+                        placeholder="Year"
+                        onChangeText={handleChange('year')}
+                        onBlur={handleBlur('year')}
+                        value={values.year}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        keyboardType="decimal-pad"
                       />
                       <InputField
                         label="Engine"
@@ -278,16 +263,15 @@ console.log('item?.nameitem?.name',item?.name)
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
                       <InputField
-                        label="Change Oil Every (Miles)"
-                        placeholder="Enter interval"
+                        label="Oil Must be changed Every"
+                        placeholder="Miles"
                         onChangeText={handleChange('changeOilEvery')}
                         onBlur={handleBlur('changeOilEvery')}
                         value={values.changeOilEvery}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                       <CustomDatePicker
-                        label="Mileage Date"
+                        label="Last Oil Change Date"
                         dateStyle={{ width: vw * 80, marginBottom: vh * 5 }}
                         date={
                           values.mileageDate ? new Date(values.mileageDate) : null
@@ -297,22 +281,20 @@ console.log('item?.nameitem?.name',item?.name)
                         }
                       />
                       <InputField
-                        label="Mileage"
-                        placeholder="Enter Current Mileage"
+                        label="Miles at last oil change"
+                        placeholder="Enter Miles"
                         onChangeText={handleChange('mileage')}
                         onBlur={handleBlur('mileage')}
                         value={values.mileage}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                       <InputField
-                        label="Next Oil Change"
-                        placeholder="Enter Next Oil Change Mileage"
+                        label="Next Due Oil Change"
+                        placeholder="Enter Miles"
                         onChangeText={handleChange('nextOilChange')}
                         onBlur={handleBlur('nextOilChange')}
                         value={values.nextOilChange}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                     </>
                   )}
@@ -335,15 +317,14 @@ console.log('item?.nameitem?.name',item?.name)
                         value={values.model}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
-                      <DropDown
+                      <InputField
                         label="Year"
-                        placeholder="Select"
-                        onValueChange={value =>
-                          setFieldValue('year', value?.value)
-                        }
-                       dynamicData={year} style={{ width: vw * 85, marginBottom: vh * 5 }}
-                         textColor={ values.year ? colors?.text?.dimBlack : colors?.text?.grey }  
-                        errors={touched.year && errors.year}
+                        placeholder="Year"
+                        onChangeText={handleChange('year')}
+                        onBlur={handleBlur('year')}
+                        value={values.year}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        keyboardType="decimal-pad"
                       />
                       <InputField
                         label="Engine"
@@ -368,11 +349,10 @@ console.log('item?.nameitem?.name',item?.name)
                         onBlur={handleBlur('changeOilEvery')}
                         value={values.changeOilEvery}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                       <CustomDatePicker
                         label="Oil Change Date"
-                        dateStyle={{ width: vw * 80, marginBottom: vh * 5,backgroundColor:'#fff' }}
+                        dateStyle={{ width: vw * 80, marginBottom: vh * 5, backgroundColor: '#fff' }}
                         date={
                           values.mileageDate ? new Date(values.mileageDate) : null
                         }
@@ -387,7 +367,6 @@ console.log('item?.nameitem?.name',item?.name)
                         onBlur={handleBlur('hours')}
                         value={values.hours}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                       <InputField
                         label="Next Oil Change (Hours)"
@@ -396,7 +375,6 @@ console.log('item?.nameitem?.name',item?.name)
                         onBlur={handleBlur('nextHours')}
                         value={values.nextHours}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                     </>
                   )}
@@ -419,15 +397,14 @@ console.log('item?.nameitem?.name',item?.name)
                         value={values.model}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
-                      <DropDown
+                      <InputField
                         label="Year"
-                        placeholder="Select"
-                        onValueChange={value =>
-                          setFieldValue('year', value?.value)
-                        }
-                        dynamicData={year} style={{ width: vw * 85, marginBottom: vh * 5 }}
-                         textColor={ values.year ? colors?.text?.dimBlack : colors?.text?.grey }  
-                        errors={touched.year && errors.year}
+                        placeholder="Year"
+                        onChangeText={handleChange('year')}
+                        onBlur={handleBlur('year')}
+                        value={values.year}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        keyboardType="decimal-pad"
                       />
                       <InputField
                         label="Engine"
@@ -452,11 +429,10 @@ console.log('item?.nameitem?.name',item?.name)
                         onBlur={handleBlur('changeOilEvery')}
                         value={values.changeOilEvery}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                       <CustomDatePicker
                         label="Oil Change Date"
-                        dateStyle={{ width: vw * 80, marginBottom: vh * 5,backgroundColor:'#fff' }}
+                        dateStyle={{ width: vw * 80, marginBottom: vh * 5, backgroundColor: '#fff' }}
                         date={
                           values.mileageDate ? new Date(values.mileageDate) : null
                         }
@@ -471,7 +447,6 @@ console.log('item?.nameitem?.name',item?.name)
                         onBlur={handleBlur('hours')}
                         value={values.hours}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                       <InputField
                         label="Next Oil Change (Hours)"
@@ -480,7 +455,6 @@ console.log('item?.nameitem?.name',item?.name)
                         onBlur={handleBlur('nextHours')}
                         value={values.nextHours}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                     </>
                   )}
@@ -503,14 +477,14 @@ console.log('item?.nameitem?.name',item?.name)
                         value={values.model}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
-                      <DropDown
+                      <InputField
                         label="Year"
-                       
-                        placeholder={'Select'} 
-                        onValueChange={value => setFieldValue('year', value?.value)} 
-                        dynamicData={year} style={{ width: vw * 85, marginBottom: vh * 5 }}
-                         textColor={ values.year ? colors?.text?.dimBlack : colors?.text?.grey }  
-                        errors={touched.year && errors.year}
+                        placeholder="Year"
+                        onChangeText={handleChange('year')}
+                        onBlur={handleBlur('year')}
+                        value={values.year}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        keyboardType="decimal-pad"
                       />
                       <InputField
                         label="Engine"
@@ -535,11 +509,10 @@ console.log('item?.nameitem?.name',item?.name)
                         onBlur={handleBlur('changeOilEvery')}
                         value={values.changeOilEvery}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                       <CustomDatePicker
                         label="Oil Change Date"
-                        dateStyle={{ width: vw * 80, marginBottom: vh * 5,backgroundColor:'#fff' }}
+                        dateStyle={{ width: vw * 80, marginBottom: vh * 5, backgroundColor: '#fff' }}
                         date={
                           values.mileageDate ? new Date(values.mileageDate) : null
                         }
@@ -554,7 +527,6 @@ console.log('item?.nameitem?.name',item?.name)
                         onBlur={handleBlur('hours')}
                         value={values.hours}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                       <InputField
                         label="Next Oil Change (Hours)"
@@ -563,12 +535,10 @@ console.log('item?.nameitem?.name',item?.name)
                         onBlur={handleBlur('nextHours')}
                         value={values.nextHours}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
-                        keyboardType="numeric"
                       />
                     </>
                   )}
 
-                  {/* Other: only Description */}
                   {item?.name === 'Other' && (
                     <InputField
                       label="Description"
@@ -580,7 +550,42 @@ console.log('item?.nameitem?.name',item?.name)
                       style={{ width: vw * 85, marginBottom: vh * 5 }}
                     />
                   )}
-
+                  <InputField
+                    label="Turbo/Super charger"
+                    placeholder="Type & Description"
+                    onChangeText={handleChange('turboCharger')}
+                    onBlur={handleBlur('turboCharger')}
+                    value={values.turboCharger}
+                    style={{ width: vw * 85, marginBottom: vh * 5 }}
+                    placeholderTextColor={colors?.text?.grey}
+                  />
+                  <InputField
+                    label="Transmission"
+                    placeholder="Type & Description"
+                    onChangeText={handleChange('transmission')}
+                    onBlur={handleBlur('transmission')}
+                    value={values.transmission}
+                    style={{ width: vw * 85, marginBottom: vh * 5 }}
+                    placeholderTextColor={colors?.text?.grey}
+                  />
+                  <InputField
+                    label="Engine oil"
+                    placeholder="Type & Description"
+                    onChangeText={handleChange('engineOilType')}
+                    onBlur={handleBlur('engineOilType')}
+                    value={values.engineOilType}
+                    style={{ width: vw * 85, marginBottom: vh * 5 }}
+                    placeholderTextColor={colors?.text?.grey}
+                  />
+                  <InputField
+                    label="Comments"
+                    placeholder="Enter Comments"
+                    multiline={true}
+                    onChangeText={handleChange('description')}
+                    onBlur={handleBlur('description')}
+                    value={values.description}
+                    style={{ width: vw * 85, marginBottom: vh * 5 }}
+                  />
                   {/* Image picker + submit */}
                   <DocumentImagePicker
                     label={'Add Photo/Attachment'}
@@ -599,7 +604,7 @@ console.log('item?.nameitem?.name',item?.name)
                   ) : (
                     <View style={{ marginTop: spacing.medium }}>
                       <MainButtonWithGradient
-                        title={'Add Vehicle Now'}
+                        title={'Save Vehicle Now'}
                         onPress={handleSubmit}
                         style={{ width: vw * 80, alignSelf: 'center' }}
                       />

@@ -1,25 +1,34 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LinearGradient from 'react-native-linear-gradient';
 
-const Background = ({children}) => {
+const Background = ({ children }) => {
   return (
-    <View style={styles.container}>
+
+    <KeyboardAwareScrollView
+      enableOnAndroid={true}
+      extraScrollHeight={1}
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{
+        flexGrow: 1, justifyContent: "center", position: 'relative',
+        backgroundColor: 'white',
+      }}>
       <LinearGradient
         colors={['#ffffff', 'transparent']}
-        start={{x: 0, y: 0}}
-        end={{x: 0.7, y: 0.7}}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.7, y: 0.7 }}
         style={styles.topLeftGradient}
       />
 
       <LinearGradient
         colors={['#ffffff', 'transparent']}
-        start={{x: 0, y: 1}}
-        end={{x: 0.7, y: 0.3}}
+        start={{ x: 0, y: 1 }}
+        end={{ x: 0.7, y: 0.3 }}
         style={styles.bottomLeftGradient}
       />
       <View style={styles.contentWrapper}>{children}</View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -30,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     backgroundColor: 'white',
-   
+
   },
   topLeftGradient: {
     position: 'absolute',

@@ -27,6 +27,8 @@ const routes = {
     weight: 'WeightCreationScreen',
     payment: 'Payment',
     subscription: 'Subscription',
+    otp: 'VerifyOtp ',
+    resetPassword: 'ResetPassword ',
   },
   main: {
     setting: 'SettingScreen',
@@ -86,7 +88,7 @@ const routes = {
     editcustomrecordscategory: 'EditCustomRecordsCategory',
     vehicleMaintenanceDetails: 'VehicleMaintenanceDetails',
     testScreen: 'TestScreen',
-    AddPart:'AddPart'
+    AddPart: 'AddPart'
 
     // Habbit Tracker Screen
   },

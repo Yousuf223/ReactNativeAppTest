@@ -151,12 +151,13 @@ const InputField = ({
               placeholderColor ? placeholderColor : colors.text.grey
             }
             secureTextEntry={secureTextEntry}
+        
           />
         )}
 
         {/* Password Visibility Toggle */}
         {password && (
-          <TouchableOpacity onPress={showPassword} style={styles.eyeButton}>
+          <TouchableOpacity hitSlop={{top:10,bottom:10,left:10,right:10}} onPress={showPassword} style={styles.eyeButton}>
             <Feather
               name={secureTextEntry ? 'eye-off' : 'eye'} // ✅ fixed
               color={secureTextEntry ? colors.text.grey : colors.theme.black}

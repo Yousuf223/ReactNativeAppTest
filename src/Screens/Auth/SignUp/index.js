@@ -1,31 +1,31 @@
 
 
-import {Formik} from 'formik';
-import React, {useState} from 'react';
-import {Platform, View} from 'react-native';
+import { Formik } from 'formik';
+import React, { useState } from 'react';
+import { Platform, View } from 'react-native';
 import AuthTextButton from '../../../Components/AuthTextButton';
-import {MainButton} from '../../../Components/Buttons/MainButton';
+import { MainButton } from '../../../Components/Buttons/MainButton';
 import CheckBox from '../../../Components/CheckBox';
 import Container from '../../../Components/Container';
 import InputField from '../../../Components/InputField';
-import {font, layout, spacing} from '../../../theme/styles';
+import { font, layout, spacing } from '../../../theme/styles';
 import styles from './styles';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import fonts from '../../../Assets/fonts';
 import ActivityLoader from '../../../Components/ActivityLoader';
 import Background from '../../../Components/Background';
 import DropDown from '../../../Components/DropDown';
 import Profile from '../../../Components/ImagePicker/ProfileImagePicker/ProfileImagePicker';
 import ModalComponent from '../../../Components/ModalComponent';
-import {CustomPhoneInput} from '../../../Components/PhoneNumber';
+import { CustomPhoneInput } from '../../../Components/PhoneNumber';
 import CustomText from '../../../Components/wrappers/Text/CustomText';
-import {useResetToLoginScreen} from '../../../Functions/resetToScreen';
+import { useResetToLoginScreen } from '../../../Functions/resetToScreen';
 import routes from '../../../Navigation/routes';
-import {colors} from '../../../theme/colors';
-import {Gender} from '../../../Utils/dummyData';
-import {LOG, makeApiCall} from '../../../Utils/helperFunction';
-import {useRegisterMutation} from '../../../Api/authApiSlice';
-import {appImages} from '../../../Assets/Images';
+import { colors } from '../../../theme/colors';
+import { Gender } from '../../../Utils/dummyData';
+import { LOG, makeApiCall } from '../../../Utils/helperFunction';
+import { useRegisterMutation } from '../../../Api/authApiSlice';
+import { appImages } from '../../../Assets/Images';
 import * as Yup from 'yup';
 
 const signupValidationSchema = Yup.object().shape({
@@ -33,7 +33,7 @@ const signupValidationSchema = Yup.object().shape({
   lastName: Yup.string().required('Last Name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
   phoneNumber: Yup.string().required('Phone Number is required'),
-   gender: Yup.string().required('Gender is required'),
+  gender: Yup.string().required('Gender is required'),
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
@@ -43,19 +43,19 @@ const signupValidationSchema = Yup.object().shape({
   termsAccepted: Yup.boolean().oneOf([true], 'You must accept the terms'),
 });
 
-const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
+const SignupScreen = ({ initialFormData = {}, isEdit = false }) => {
   const navigation = useNavigation();
-  const {resetToLoginScreen} = useResetToLoginScreen();
+  const { resetToLoginScreen } = useResetToLoginScreen();
   const [valid, setValid] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-    const [validateAfterSubmit, setValidateAfterSubmit] = useState(false);
+  const [validateAfterSubmit, setValidateAfterSubmit] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isTaskSuccess, setIsTaskSuccess] = useState(false);
   const [registration] = useRegisterMutation();
 
- const handleSignupData = async (values) => {
-  
+  const handleSignupData = async (values) => {
+
     const payload = {
       firstName: values.firstName.trim(),
       lastName: values.lastName.trim(),
@@ -72,12 +72,16 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
 
     try {
       setIsLoading(true);
-      const response =   await makeApiCall(registration, payload)
+      const response = await makeApiCall(registration, payload)
       console.log('✅ Signup Success Response:', response);
-      setIsTaskSuccess(true);
-      // resetForm();
-      setIsLoading(false);
-      setModalVisible(true);
+      if (response) {
+        setIsTaskSuccess(true);
+        // resetForm();
+        setIsLoading(false);
+        setModalVisible(true);
+      }
+
+
     } catch (error) {
       console.log('❌ Signup API Error:', error);
       setIsLoading(false);
@@ -92,13 +96,13 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
           keyboardAware
           keyboardHandled={'handled'}
           contentContainerStyle={styles.mainContentContainer}>
-          <View style={{marginTop: spacing.xxlarge}} />
+          <View style={{ marginTop: spacing.xxlarge }} />
           <CustomText
             text={'Register'}
             font={fonts.clash.semibold}
             size={font.h6}
           />
-          <View style={{margin: spacing.xsmall}} />
+          <View style={{ margin: spacing.xsmall }} />
           <CustomText
             text={'Fill out this form to register'}
             size={font.medium}
@@ -120,7 +124,7 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                 firstName: '',
                 lastName: '',
                 email: '',
-                 gender: '',
+                gender: '',
                 phoneNumber: '',
                 formattedPhoneNumber: '',
                 password: '',
@@ -130,15 +134,15 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                 deviceType: Platform.OS === 'ios' ? 'ios' : 'android',
               }}
               validationSchema={signupValidationSchema}
-                validateOnChange={validateAfterSubmit}
+              validateOnChange={validateAfterSubmit}
               validateOnBlur={validateAfterSubmit}
-              onSubmit={values =>  handleSignupData(values)}
-              // onSubmit={(values, {resetForm}) => {
-              //   LOG('values:', values);
-              //   handleSignupData(values);
-              // }}
-              // handleSignupData(values)
-              >
+              onSubmit={values => handleSignupData(values)}
+            // onSubmit={(values, {resetForm}) => {
+            //   LOG('values:', values);
+            //   handleSignupData(values);
+            // }}
+            // handleSignupData(values)
+            >
               {({
                 handleChange,
                 handleBlur,
@@ -149,7 +153,7 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                 values,
               }) => (
                 <View style={styles.contentContainer}>
-                  <View style={{marginBottom: spacing?.medium}}>
+                  <View style={{ marginBottom: spacing?.medium }}>
                     <InputField
                       label="First Name"
                       placeholder="Enter First Name"
@@ -159,7 +163,7 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                       value={values?.firstName}
                     />
                   </View>
-                  <View style={{marginBottom: spacing?.medium}}>
+                  <View style={{ marginBottom: spacing?.medium }}>
                     <InputField
                       label="Last Name"
                       placeholder="Enter Last Name"
@@ -169,7 +173,7 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                       value={values?.lastName}
                     />
                   </View>
-                  <View style={{marginBottom: spacing?.medium}}>
+                  <View style={{ marginBottom: spacing?.medium }}>
                     <InputField
                       label="Email Address"
                       placeholder="Enter Email Address"
@@ -200,7 +204,7 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                       showMessage={showMessage}
                     />
                   </View>
-                  <View style={{marginBottom: spacing?.medium}}>
+                  <View style={{ marginBottom: spacing?.medium }}>
                     <DropDown
                       label={'Gender'}
                       required={true}
@@ -211,13 +215,13 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                       }
                       placeholder={'Select'}
                       onValueChange={value =>
-                        setFieldValue('gender',value?.value?.toUpperCase())
+                        setFieldValue('gender', value?.value?.toUpperCase())
                       }
                       dynamicData={Gender}
                       errors={errors?.gender}
                     />
                   </View>
-                  <View style={{marginBottom: spacing?.medium}}>
+                  <View style={{ marginBottom: spacing?.medium }}>
                     <InputField
                       label="Password"
                       placeholder="Enter Password"
@@ -229,7 +233,7 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                       returnKeyType={'done'}
                     />
                   </View>
-                  <View style={{marginBottom: spacing?.medium}}>
+                  <View style={{ marginBottom: spacing?.medium }}>
                     <InputField
                       label="Confirm Password"
                       placeholder="Enter Password"
@@ -248,7 +252,7 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                       marginBottom: 10,
                     }}>
                     <CheckBox
-                      highligthStyle={{backgroundColor: '#00BA00'}}
+                      highligthStyle={{ backgroundColor: '#00BA00' }}
                       text={'I accept all the Terms & Conditions'}
                       checked={values.termsAccepted}
                       setChecked={() =>
@@ -266,14 +270,14 @@ const SignupScreen = ({initialFormData = {}, isEdit = false}) => {
                       disabled={
                         !isValid || isTaskSuccess || !values.termsAccepted
                       }
-                      onPress={ () => {   setValidateAfterSubmit(true),handleSubmit()} }
+                      onPress={() => { setValidateAfterSubmit(true), handleSubmit() }}
                     />
                   )}
                 </View>
               )}
             </Formik>
           </View>
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <AuthTextButton
               text={'Already have an account?'}
               buttonText="Sign In"

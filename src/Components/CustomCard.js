@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dimensions, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import fonts from '../Assets/fonts';
 import { appShadow, colors } from '../theme/colors';
 import { font } from '../theme/styles';
@@ -8,7 +8,7 @@ import CustomIcon from './CustomIcon';
 import CustomText from './wrappers/Text/CustomText';
 import { appImages } from '../Assets/Images';
 import MyIcons from './MyIcons';
-
+import ImagePopup from  '../Components/Popup/imagePopup'
 const { width, height } = Dimensions.get('screen');
 
 const CustomCard = ({
@@ -29,34 +29,74 @@ const CustomCard = ({
   onDeletePress,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  let imgSrc = couponCard && getImageUrl(  item?.gallery[0]);
+  let imgSrc = couponCard && getImageUrl(item?.gallery[0]);
   let title = couponCard && `${item?.vehicleDetails?.make ? item?.vehicleDetails?.make : "Default Vehicle"} ${item?.vehicleDetails?.model ? item?.vehicleDetails?.model : ""}`
-// console.log('sdsadsad',item?.image && item?.image || item?.gallery[0] && item?.gallery[0]  )
+
+
+
+  // Function to render single image
+  const renderSingleImage = () => {
+    if (!item?.gallery || item.gallery.length === 0) {
+      return (
+        <TouchableOpacity activeOpacity={0.9} onPress={()=> [setIsFavorite(true)]}>
+    <CustomIcon
+          src={null} 
+          disabled={true}
+          customIconWrapper={[styles.eventImg, { height: height * 0.232 }]}
+          resizeMode={'cover'}
+          customIconStyle={{
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+          }}
+        />
+        </TouchableOpacity>
+    
+      );
+    }
+
+    const imageUrl = getImageUrl(item.gallery[0]);
+    console.log('Single image URL:', imageUrl);
+
+    return (
+        <TouchableOpacity activeOpacity={0.9} onPress={()=> [setIsFavorite(true)]}>
+      <CustomIcon
+        src={imageUrl}
+        disabled={true}
+        customIconWrapper={[styles.eventImg, { height: height * 0.232 }]}
+        resizeMode={'cover'}
+        customIconStyle={{
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}
+      />
+       {isFavorite &&       <ImagePopup setIsFavorite={setIsFavorite} images={item} isVisible={isFavorite} /> }
+      </TouchableOpacity>
+    );
+  };
+
+
+
+
   return (
     <TouchableOpacity
       style={[
         !product && styles.container,
-        { paddingHorizontal: noPadding ? 0 : 10 },
+        { paddingHorizontal: 0},
         shopMyCart && { backgroundColor: 'transparent' },
         (shopMyCart || orderCardList) && { backgroundColor: 'transparent' },
       ]}
-      onPress={onPress}
+      // onPress={onPress}
       activeOpacity={0.9}
       disabled={disabled}>
+
       {couponCard && (
-        <View style={styles.bookingContainer}>
-          <CustomIcon
-            src={ imgSrc}
-            disabled={true}
-            customIconWrapper={[styles.eventImg, { height: height * 0.232 }]}
-            resizeMode={'cover'}
-            customIconStyle={{
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            }}
-          />
-          <View style={styles?.couponItems}>
+        <View 
+        
+        // style={{ paddingHorizontal: noPadding ? 0 : 10 }}
+        >
+          {renderSingleImage()}
+
+          <TouchableOpacity onPress={onPress} style={styles?.couponItems}>
             <CustomText
               text={title}
               color={colors?.text?.dimBlack}
@@ -64,9 +104,10 @@ const CustomCard = ({
               size={font.xxlarge}
               numberOfLines={1}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       )}
+
       {addRecordCard && (
         <View
           style={[
@@ -97,6 +138,8 @@ const CustomCard = ({
           </View>
         </View>
       )}
+     
+
     </TouchableOpacity>
   );
 };
@@ -108,12 +151,11 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 10,
     position: 'relative',
+    marginHorizontal:10
   },
-
   bookingContainer: {
     // gap: 8,
   },
-
   couponItems: {
     ...appShadow,
     backgroundColor: colors?.theme?.white,
@@ -124,11 +166,9 @@ const styles = StyleSheet.create({
     gap: 5,
     alignItems: 'center',
   },
-
   bookingImg: {
     height: height * 0.155,
     width: width - 58,
-    // ...Shadows?.shadow0
   },
   eventImg: {
     height: height * 0.215,
@@ -137,11 +177,9 @@ const styles = StyleSheet.create({
   productCard: {
     backgroundColor: colors?.theme?.white,
     width: width / 2.5,
-
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    // ...Shadows?.shadow5,
     ...appShadow,
   },
   productImageBg: {
@@ -162,5 +200,9 @@ const styles = StyleSheet.create({
   leftItem: {
     marginBottom: 6,
     marginTop: -6,
+  },
+  flatListContent: {
+    // Width dynamically set hogi
+    height: '100%',
   },
 });

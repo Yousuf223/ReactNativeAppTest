@@ -61,7 +61,7 @@ const CustomDatePicker = ({
         <CustomText
           // text={label ? label : 'Enter Date'}
           text={<>
-            {label ? label : 'Enter Date'}
+            {label ? label : 'Calendar'}
             {required && <CustomText text={' * '} style={styles.asterisk} />}
           </>}
           font={fonts.benzin.regular}
@@ -74,7 +74,7 @@ const CustomDatePicker = ({
         style={[styles.dateContainer, dateStyle]}
         onPress={() => setShowDatePicker(true)}>
         <CustomText
-          text={dob || 'Enter Date'}
+          text={dob || 'Calendar'}
           font={fonts.benzin.regular}
           size={font.small}
           color={dob ? colors.text.dimBlack : colors.text.grey}

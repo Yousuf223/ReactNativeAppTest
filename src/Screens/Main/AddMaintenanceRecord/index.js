@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
-import { LogBox, ScrollView, TouchableOpacity, View ,Image} from 'react-native';
+import { LogBox, ScrollView, TouchableOpacity, View, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { executeApiRequestForQueryParams } from '../../../Api/methods/method';
@@ -74,8 +74,6 @@ const AddMaintenanceRecord = props => {
 
   const userDetails = useSelector(state => state?.auth?.user || {});
   const userId = userDetails?._id;
-
-  // Fetch vehicles from API
   const {
     data: vehicleData,
     isLoading: vehicleLoading,
@@ -83,8 +81,6 @@ const AddMaintenanceRecord = props => {
     error: vehicleError,
     refetch: vehicleRefetch,
   } = useFetchVehicleByUserQuery();
-
-  // Fetch stores from API
   const {
     data: storeData,
     isLoading: storeLoading,
@@ -93,7 +89,6 @@ const AddMaintenanceRecord = props => {
     refetch: storeRefetch,
   } = useFetchStoreByUserIdQuery();
 
-  // Fetch selected store details (for mechanics)
   const {
     data: selectedStoreData,
     isLoading: selectedStoreLoading,
@@ -120,19 +115,7 @@ const AddMaintenanceRecord = props => {
     error: autopartsError,
     refetch: autopartsRefetch,
   } = useFetchMaintenanceAutopartsByUserQuery({ refetchOnFocus: true });
-
-  LOG('autoParts:autoParts', autoParts);
-  LOG('autopartsErrorautopartsError:', autopartsError);
-
-  // Mutation for adding maintenance records
   const [addMaintenance, { isLoading: isAddingMaintenance }] = useAddMutation();
-
-  LOG('data-vehicle', vehicleData);
-  LOG('data-store', storeData);
-  LOG('selected-store-data', selectedStoreData);
-  LOG('autoParts', autoParts);
-
-  // Process vehicle data for dropdown
   let Vehicles = [];
   if (Array.isArray(vehicleData) && vehicleData.length > 0) {
     const uniqueMakes = [
@@ -177,15 +160,14 @@ const AddMaintenanceRecord = props => {
     Autoparts = [{ key: 0, value: 'No Item found', id: 'no_item_found' }];
   }
 
-  
+
   let Conditions = [
     { key: '0', value: 'NEW', id: 0 },
     { key: '1', value: 'USED', id: 1 },
   ];
   let Warranty = [
     { key: '0', value: 'YES', id: 0 },
-    { key: '1', value: 'NO', id: 1 },
-    // { key: '2', value: 'N/A', id: 2 },
+    { key: '1', value: 'NO', id: 1 }
   ];
 
   useEffect(() => {
@@ -199,15 +181,12 @@ const AddMaintenanceRecord = props => {
 
   useEffect(() => {
     if (vehicleIdPrefilled && formikRef.current && Vehicles.length > 0) {
-      // Find the vehicle in the Vehicles array that matches vehicleIdPrefilled
       const selectedVehicleObj = Vehicles.find(
         vehicle => vehicle.id === vehicleIdPrefilled,
       );
 
       if (selectedVehicleObj) {
-        // Set the Formik field value
         formikRef.current.setFieldValue('vehicleId', vehicleIdPrefilled);
-        // Update the selectedVehicle state to reflect in the DropDown
         setSelectedVehicle(vehicleIdPrefilled);
       } else {
         console.warn(
@@ -239,8 +218,6 @@ const AddMaintenanceRecord = props => {
       let payload = {
         ...values,
         vehicleId: selectedVehicle,
-        // storeId: selectedStore,
-        // workerId: selectedMechanic,
         enterDate:
           values?.enterDate || new Date().toISOString().split('T')[0],
         autoPartIds: JSON.stringify(autoPartsIdss),
@@ -251,9 +228,6 @@ const AddMaintenanceRecord = props => {
       };
 
       LOG('payloadddd', payload);
-
-      // Uncomment when API is ready
-
       const result = await executeApiRequestForQueryParams({
         apiCallFunction: addMaintenance,
         body: payload,
@@ -278,20 +252,6 @@ const AddMaintenanceRecord = props => {
 
   const FilterInputRender = ({ values, setFieldValue, touched, errors }) => (
     <View style={styles.barcontainer}>
-
-      {/* <TouchableOpacity
-        style={styles.addmore}
-        onPress={() => navigation.navigate(routes.main.addVehicles)}>
-        <MyIcons name={'add'} size={15} />
-        <CustomText
-          text="Add New Vehicle"
-          font={fonts.benzin.regular}
-          size={font.medium}
-          color={colors.text.red}
-          style={{ marginTop: 5 }}
-        />
-      </TouchableOpacity> */}
-
       <InputField
         label="Select Location/Shop"
         placeholder="Enter Location/Shop"
@@ -313,11 +273,16 @@ const AddMaintenanceRecord = props => {
     setFieldValue,
   }) => {
     const addPartDetail = () => {
-      setFieldValue('partDetails', [
-        ...values.partDetails,
-        { partNum: '', partDescription: '' },
-      ]);
+      if (!Array.isArray(values.partDetails)) {
+        setFieldValue('partDetails', [{ partNum: '', partDescription: '' }]);
+      } else {
+        setFieldValue('partDetails', [
+          ...values.partDetails,
+          { partNum: '', partDescription: '' },
+        ]);
+      }
     };
+
     const tenYearsLater = new Date();
     tenYearsLater.setFullYear(tenYearsLater.getFullYear() + 10);
 
@@ -330,15 +295,6 @@ const AddMaintenanceRecord = props => {
 
     return (
       <View style={styles.barcontainer1}>
-        {/* <CustomText
-          text="Maintenance Details"
-          size={font.xxlarge}
-          font={fonts.clash.regular}
-          color={colors.text.dimBlack}
-          style={{ marginBottom: 10, marginLeft: 10 }}
-        /> */}
-
-       
         <InputField
           label="Component/Part replaced or repaired"
           placeholder="Enter Component/Part replaced or repaired"
@@ -389,7 +345,7 @@ const AddMaintenanceRecord = props => {
             color={colors.text.dimBlack}
             style={{ marginBottom: vh * 4 }}
           /> */}
-          {values.partDetails.map((part, index) => (
+          {values.partDetails?.map((part, index) => (
             <View
               key={index}
               style={{
@@ -605,7 +561,8 @@ const AddMaintenanceRecord = props => {
             actualMaintenancePrice: "",
             estimatedMaintenancePrice: "",
             totalMaintenanceCost: '',
-            partName: ''
+            partName: '',
+            partDetails: [],
           }}
           // validationSchema={validationSchema}
           onSubmit={handleSubmitForm}>

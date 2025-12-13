@@ -53,7 +53,7 @@ export const recordsApi = createApi({
         url: `${endpoints.records.edit.url}/${id}`,
         method: endpoints.records.edit.method,
         headers: { 'Content-Type': 'multipart/form-data' },
-        params: { type },
+       params: { type }, 
         body: body,
       })},
     }),

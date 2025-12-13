@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Platform, View, TouchableOpacity } from 'react-native';
+import { Platform, View, TouchableOpacity, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import routes from '../../Navigation/routes';
 import { layout, spacing } from '../../theme/styles';
@@ -97,7 +97,7 @@ const titleRoutes = {
   [routes.main.paymentDetails]: 'Payment Details',
   [routes.main.notification]: 'Notification',
   [routes.main.autoPartsDetails]: 'Auto Parts Details',
-  [routes.tab.addrecords]: 'Dashboard',
+  [routes.tab.addrecords]: 'DASH BOARD',
   [routes.tab.otherrecord]: 'Other Record',
   [routes.tab.records]: 'Vehicle Records',
   [routes.tab.vehicles]: 'My Vehicles',
@@ -237,12 +237,15 @@ const getHeaderRight = (
                 onPress={OnEditPress}
                 style={{
                   borderWidth: 1,
-                  padding: 10,
+                  padding: 6,
                   backgroundColor: colors?.theme?.white,
-                  borderRadius: 25,
+                  borderRadius: 10,
                   borderColor: colors.text.grey,
+                  marginTop:10,
+                 right:10
                 }}>
-                <MyIcons name="edit" />
+                  <Text>EDIT</Text>
+                {/* <MyIcons name="edit" /> */}
               </TouchableOpacity>
             </View>
           ) : (

@@ -146,8 +146,8 @@ const styles = StyleSheet.create({
   tabsWrapper: {
     flexDirection: 'row',
     overflow: 'hidden',
-    justifyContent: 'space-around',
-    gap: 18,
+    justifyContent: 'space-aroun',
+    gap: 0,
   },
   tabs: {
     flex: 1,
@@ -179,6 +179,8 @@ const styles = StyleSheet.create({
     bottom: 52,
     right: '42%',
     left: '42%',
+    borderColor:'#000',
+    borderWidth:2
   },
 });
 

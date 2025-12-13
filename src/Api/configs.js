@@ -1,9 +1,9 @@
-// export const baseUrl = 'https://react.customdev.solutions:3056/api';
-export const baseUrl = 'http://66.29.143.67/api';
+//  export const baseUrl = 'https://h5kqzzf8-3056.uks1.devtunnels.ms/api';
+export const baseUrl = 'https://api.partslogger.com/api';
 
-// export const baseUrl = 'https://clsd39mb-3056.uks1.devtunnels.ms/api';
-export const imageServer = 'http://66.29.143.67/Uploads/';
-
+// export const imageServer = 'https://h5kqzzf8-3056.uks1.devtunnels.ms/uploads/';
+export const imageServer = 'https://api.partslogger.com/uploads/';
+// https://h5kqzzf8-3056.uks1.devtunnels.ms/
 export const endpoints = {
   auth: {
     login: {

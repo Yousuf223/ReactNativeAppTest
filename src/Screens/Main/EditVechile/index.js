@@ -12,7 +12,7 @@ import DocumentImagePicker from '../../../Components/ImagePicker/DocumentImagePi
 import ActivityLoader from '../../../Components/ActivityLoader';
 import { MainButtonWithGradient } from '../../../Components/Buttons/MainButton';
 import ModalComponent from '../../../Components/ModalComponent';
-import { useEditMutation } from '../../../Api/recordsApiSlice';
+import { useEditMutation } from '../../../Api/vehiclesApiSlice';
 import { imageServer } from '../../../Api/configs';
 import vehicleValidation from '../AddVehicleDetails/vehicleValidation';
 import styles from './styles'
@@ -33,7 +33,7 @@ const EditVehicleDetails = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [newImages, setNewImages] = useState([]);
   const [deletedImages, setDeletedImages] = useState([]);
-
+console.log('vehicleDetails?.recordType',deletedImages)
   const Warranty = [
     { key: '0', value: 'YES', id: 0 },
     { key: '1', value: 'NO', id: 1 },
@@ -49,11 +49,7 @@ const EditVehicleDetails = ({ route, navigation }) => {
       gallery: newImages,
       deletedImages: JSON.stringify(deletedImages),
     };
-    console.log('Payload:', payload);
-    console.log('New Images:', newImages);
-    console.log('Deleted Images:', deletedImages);
-
-
+    console.log('payloadpayload-----',payload)
     try {
       const response = await executeApiRequest({
         apiCallFunction: edit,
@@ -95,6 +91,7 @@ const EditVehicleDetails = ({ route, navigation }) => {
   const handleImageChange = (images, removedImage, setFieldValue) => {
 
     // Ensure images is an array
+    console.log('removedImage',removedImage)
     const updatedImages = Array.isArray(images) ? images : [];
     setFieldValue('gallery', updatedImages);
     // Handle removed image
@@ -110,7 +107,7 @@ const EditVehicleDetails = ({ route, navigation }) => {
 
   return (
     <>
-      <CustomHeader title={`Edit ${vehicleDetails?.vehicleType?.name}`} />
+      <CustomHeader title={`EDIT`} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1 }}>
@@ -135,12 +132,14 @@ const EditVehicleDetails = ({ route, navigation }) => {
             notes: vehicleDetails?.additionalDetails?.notes || '',
             gallery: normalizeGallery(vehicleDetails?.gallery) || [],
             cylinders: vehicleDetails?.additionalDetails?.cylinders?.toString() || '',
-            engineOilType: vehicleDetails?.additionalDetails?.engineOilType || '',
             engineCoolantType: vehicleDetails?.additionalDetails?.engineCoolantType || '',
             transmissionFluidType: vehicleDetails?.additionalDetails?.transmissionFluidType || '',
             hasTurboCharger: vehicleDetails?.additionalDetails?.hasTurboCharger?.toString() || '',
             tireSize: vehicleDetails?.additionalDetails?.tireSize || '',
             tirePressure: vehicleDetails?.additionalDetails?.tirePressure?.toString() || '',
+            turboCharger:vehicleDetails?.additionalDetails?.turboCharger || false,
+            transmissionType:vehicleDetails?.additionalDetails?.transmissionType?.toString()|| "",
+                engineOilType: vehicleDetails?.additionalDetails?.engineOilType || '',
           }}
           validationSchema={vehicleValidation}
           onSubmit={handleSubmitForm}>
@@ -169,288 +168,417 @@ const EditVehicleDetails = ({ route, navigation }) => {
                   />
                   <View style={{ alignItems: 'center', marginTop: vh * 4 }}>
                     <InputField
-                      label="Vehicle Category"
-                      placeholder="Enter Vehicle Category"
-                      required
-                      value={values.vehicleType}
-                      editable={false}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.vehicleType && errors.vehicleType}
-                    />
-                    <InputField
                       label={`${vehicleDetails?.vehicleType?.name} Make`}
                       placeholder={`Enter ${vehicleDetails?.vehicleType?.name} Make`}
                       onChangeText={handleChange('make')}
                       onBlur={handleBlur('make')}
                       value={values.make}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      style={{ width: vw * 85, marginBottom: vh * 0 }}
                       errors={touched.make && errors.make}
                     />
+             
+          
                     <InputField
-                      label="Select Model"
-                      placeholder="Enter Model"
-                      onChangeText={handleChange('model')}
-                      onBlur={handleBlur('model')}
-                      value={values.model}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.model && errors.model}
-                    />
-                    <DropDown
-                      label={'Select Year'}
-                      textColor={
-                        values.year ? colors.text.dimBlack : colors.text.grey
-                      }
-                      placeholder={'Select'}
-                      onValueChange={value => setFieldValue('year', value)}
-                      dynamicData={year}
-                      initialValue={values.year}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.year && errors.year}
-                    />
-                    <InputField
-                      label="Current Mileage"
-                      placeholder="Enter Current Mileage"
-                      onChangeText={handleChange('carMilage')}
-                      onBlur={handleBlur('carMilage')}
-                      value={values.carMilage}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.carMilage && errors.carMilage}
-                      keyboardType="numeric"
-                    />
-                    <InputField
-                      label="VIN or Serial Number"
-                      placeholder="Enter VIN or Serial Number"
-                      onChangeText={handleChange('VIN')}
-                      onBlur={handleBlur('VIN')}
-                      value={values.VIN}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.VIN && errors.VIN}
-                    />
-                    <CustomDatePicker
-                      dateStyle={{ width: vw * 80, marginBottom: vh * 5 }}
-                      labelStyle={{ marginLeft: 20 }}
-                      date={
-                        values.purchaseDate &&
-                          !isNaN(new Date(values.purchaseDate))
-                          ? new Date(values.purchaseDate)
-                          : new Date()
-                      }
-                      label="Date of Purchase"
-                      onDateChange={date =>
-                        setFieldValue('purchaseDate', date.toISOString())
-                      }
-                      errors={touched.purchaseDate && errors.purchaseDate}
-                    />
-                    <DropDown
-                      label={'Warranty'}
-                      placeholder={'Select'}
-                      textColor={
-                        values.warranty
-                          ? colors.text.dimBlack
-                          : colors.text.grey
-                      }
-                      onValueChange={(value, id) =>
-                        setFieldValue('warranty', value)
-                      }
-                      dynamicData={Warranty}
-                      initialValue={values.warranty}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.warranty && errors.warranty}
-                    />
-                    <InputField
-                      label="Description/Comment"
-                      placeholder="Enter Description"
-                      multiline={true}
-                      onChangeText={handleChange('description')}
-                      onBlur={handleBlur('description')}
-                      value={values.description}
-                      style={{ width: vw * 85 }}
-                      errors={touched.description && errors.description}
-                    />
+                        label="Model"
+                        placeholder="Enter Model"
+                        onChangeText={handleChange('model')}
+                        onBlur={handleBlur('model')}
+                        value={values.model}
+                        style={{ width: vw * 85, marginTop: vh * 5 }}
+                      />
+                            <InputField
+                          label="Year"
+                        placeholder="Year"
+                        onChangeText={handleChange('year')}
+                        onBlur={handleBlur('year')}
+                        value={values.year}
+                        style={{ width: vw * 85, marginTop: vh * 5 }}/>
                   </View>
                 </View>
 
-                <View style={styles.hr} />
+                {/* <View style={styles.hr} /> */}
 
                 <View
                   style={[
                     styles.detailContainer,
                     { paddingHorizontal: spacing.large },
                   ]}>
-                  <CustomText
-                    text={`Additional Details`}
-                    color={colors.text.dimBlack}
-                    font={fonts.clash.regular}
-                    size={font.xxlarge}
-                  />
-                  <View style={{ alignItems: 'center', marginTop: vh * 4 }}>
-                    <DropDown
-                      label={'Fuel Type'}
-                      textColor={
-                        values.fuel ? colors.text.dimBlack : colors.text.grey
-                      }
-                      placeholder={'Select'}
-                      onValueChange={value =>
-                        setFieldValue('fuel', value.toUpperCase())
-                      }
-                      dynamicData={fuelTypes}
-                      initialValue={values.fuel}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.fuel && errors.fuel}
-                    />
-                    <DropDown
-                      label={'Has Turbo/Super Charger'}
-                      textColor={
-                        values.hasTurboCharger
-                          ? colors.text.dimBlack
-                          : colors.text.grey
-                      }
-                      placeholder={'Select'}
-                      onValueChange={value =>
-                        setFieldValue('hasTurboCharger', value)
-                      }
-                      dynamicData={[
-                        { key: '0', value: 'No' },
-                        { key: '1', value: 'Turbo Charger' },
-                        { key: '2', value: 'Super Charger' },
-                      ]}
-                      initialValue={values.hasTurboCharger}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.hasTurboCharger && errors.hasTurboCharger}
-                    />
-                    <DropDown
-                      label={'Transmission Type'}
-                      textColor={
-                        values.transmissionType
-                          ? colors.text.dimBlack
-                          : colors.text.grey
-                      }
-                      placeholder={'Select'}
-                      onValueChange={value =>
-                        setFieldValue('transmissionType', value)
-                      }
-                      dynamicData={transmissionTypes}
-                      initialValue={values.transmissionType}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={
-                        touched.transmissionType && errors.transmissionType
-                      }
-                    />
-                    <InputField
-                      label="Transmission Speed"
-                      placeholder="Enter Transmission Speed"
-                      onChangeText={handleChange('transmissionSpeed')}
-                      onBlur={handleBlur('transmissionSpeed')}
-                      value={values.transmissionSpeed}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={
-                        touched.transmissionSpeed && errors.transmissionSpeed
-                      }
-                    />
-                    <InputField
-                      label="Tire Size"
-                      placeholder="Enter Tire Size"
-                      onChangeText={handleChange('tireSize')}
-                      onBlur={handleBlur('tireSize')}
-                      value={values.tireSize}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.tireSize && errors.tireSize}
-                      keyboardType={'default'}
-                    />
-                    <InputField
-                      label="Engine Size (L)"
-                      placeholder="Enter Engine Size"
-                      onChangeText={handleChange('engineSize')}
-                      onBlur={handleBlur('engineSize')}
-                      value={values.engineSize}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.engineSize && errors.engineSize}
-                      keyboardType="numeric"
-                    />
-                    <DropDown
-                      label={'Number of Cylinders'}
-                      textColor={
-                        values.cylinders
-                          ? colors.text.dimBlack
-                          : colors.text.grey
-                      }
-                      placeholder={'Select'}
-                      onValueChange={value => setFieldValue('cylinders', value)}
-                      dynamicData={cylinderOptions}
-                      initialValue={values.cylinders}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.cylinders && errors.cylinders}
-                    />
-                    <InputField
-                      label="Recommended Engine Oil Type"
-                      placeholder="Enter Recommended Engine Oil Type"
-                      onChangeText={handleChange('engineOilType')}
-                      onBlur={handleBlur('engineOilType')}
-                      value={values.engineOilType}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.engineOilType && errors.engineOilType}
-                    />
-                    <InputField
-                      label="Recommended Engine Coolant Type"
-                      placeholder="Enter Recommended Engine Coolant Type"
-                      onChangeText={handleChange('engineCoolantType')}
-                      onBlur={handleBlur('engineCoolantType')}
-                      value={values.engineCoolantType}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={
-                        touched.engineCoolantType && errors.engineCoolantType
-                      }
-                    />
-                    <InputField
-                      label="Transmission Fluid Type"
-                      placeholder="Enter Transmission Fluid Type"
-                      onChangeText={handleChange('transmissionFluidType')}
-                      onBlur={handleBlur('transmissionFluidType')}
-                      value={values.transmissionFluidType}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={
-                        touched.transmissionFluidType &&
-                        errors.transmissionFluidType
-                      }
-                    />
+                  <View style={{ alignItems: 'center', }}>
+          
+                {vehicleDetails?.vehicleType?.name === 'CAR / Motorcycle' && (
+                    <>
+                      <InputField
+                        label="Engine"
+                        placeholder="Enter Engine Info"
+                        onChangeText={handleChange('engine')}
+                        onBlur={handleBlur('engine')}
+                        value={values.engine}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Cylinders"
+                        placeholder="Enter Cylinder Type"
+                        onChangeText={handleChange('cylinders')}
+                        onBlur={handleBlur('cylinders')}
+                        value={values.cylinders}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Drive Train"
+                        placeholder="FWD / RWD / 4WD / AWD"
+                        onChangeText={handleChange('driveTrain')}
+                        onBlur={handleBlur('driveTrain')}
+                        value={values.driveTrain}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="VIN"
+                        placeholder="Enter VIN"
+                        onChangeText={handleChange('VIN')}
+                        onBlur={handleBlur('VIN')}
+                        value={values.VIN}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Plate Number"
+                        placeholder="Enter Plate Number"
+                        onChangeText={handleChange('plateNumber')}
+                        onBlur={handleBlur('plateNumber')}
+                        value={values.plateNumber}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Tires"
+                        placeholder="Enter Tire Brand/Size"
+                        onChangeText={handleChange('tires')}
+                        onBlur={handleBlur('tires')}
+                        value={values.tires}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Tire Pressure"
+                        placeholder="Enter Tire Pressure"
+                        onChangeText={handleChange('tirePressure')}
+                        onBlur={handleBlur('tirePressure')}
+                        value={values.tirePressure}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                    </>
+                  )}
+          {vehicleDetails?.vehicleType?.name === 'Semi Truck / Truck' && (
+                    <>
+                      <DropDown
+                        label="Type"
+                        placeholder="Select Truck Type"
+                        onValueChange={value =>
+                          setFieldValue('type', value?.value)
+                        }
+                        dynamicData={[
+                          { key: '0', value: 'Semi' },
+                          { key: '1', value: 'Box Truck' },
+                          { key: '2', value: 'Flatbed Truck' },
+                          { key: '3', value: 'Dump Truck' },
+                        ]}
+                    style={{ width: vw * 85, marginBottom: vh * 5 }}
+                         textColor={ values.year ? colors?.text?.dimBlack : colors?.text?.grey }  
+                        errors={touched.year && errors.year}
+                      />
+                      <InputField
+                        label="Engine"
+                        placeholder="Enter Engine Info"
+                        onChangeText={handleChange('engine')}
+                        onBlur={handleBlur('engine')}
+                        value={values.engine}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="VIN"
+                        placeholder="Enter VIN"
+                        onChangeText={handleChange('VIN')}
+                        onBlur={handleBlur('VIN')}
+                        value={values.VIN}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Oil Must be changed Every"
+                        placeholder="Miles"
+                        onChangeText={handleChange('changeOilEvery')}
+                        onBlur={handleBlur('changeOilEvery')}
+                        value={values.changeOilEvery}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        
+                      />
+                      <CustomDatePicker
+                        label="Last Oil Change Date"
+                        dateStyle={{ width: vw * 80, marginBottom: vh * 5 }}
+                        date={
+                          values.mileageDate ? new Date(values.mileageDate) : null
+                        }
+                        onDateChange={date =>
+                          setFieldValue('mileageDate', date.toISOString())
+                        }
+                      />
+                      <InputField
+                        label="Miles at last oil changs"
+                        placeholder="Enter Miles"
+                        onChangeText={handleChange('mileage')}
+                        onBlur={handleBlur('mileage')}
+                        value={values.mileage}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Next Due Oil Change"
+                      placeholder="Enter Miles"
+                        onChangeText={handleChange('nextOilChange')}
+                        onBlur={handleBlur('nextOilChange')}
+                        value={values.nextOilChange}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                    </>
+                  )}
 
+                  {vehicleDetails?.vehicleType?.name === 'Heavy Equipment' && (
+                    <>
+                      <InputField
+                        label="Type"
+                        placeholder="e.g. Bulldozer, Loader"
+                        onChangeText={handleChange('type')}
+                        onBlur={handleBlur('type')}
+                        value={values.type}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Engine"
+                        placeholder="Enter Engine"
+                        onChangeText={handleChange('engine')}
+                        onBlur={handleBlur('engine')}
+                        value={values.engine}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="VIN"
+                        placeholder="Enter VIN"
+                        onChangeText={handleChange('VIN')}
+                        onBlur={handleBlur('VIN')}
+                        value={values.VIN}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Change Oil Every (Hours)"
+                        placeholder="Enter interval"
+                        onChangeText={handleChange('changeOilEvery')}
+                        onBlur={handleBlur('changeOilEvery')}
+                        value={values.changeOilEvery}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <CustomDatePicker
+                        label="Oil Change Date"
+                        dateStyle={{ width: vw * 80, marginBottom: vh * 5,backgroundColor:'#fff' }}
+                        date={
+                          values.mileageDate ? new Date(values.mileageDate) : null
+                        }
+                        onDateChange={date =>
+                          setFieldValue('mileageDate', date.toISOString())
+                        }
+                      />
+                      <InputField
+                        label="Hours"
+                        placeholder="Enter Hours"
+                        onChangeText={handleChange('hours')}
+                        onBlur={handleBlur('hours')}
+                        value={values.hours}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Next Oil Change (Hours)"
+                        placeholder="Enter Next Oil Change Hours"
+                        onChangeText={handleChange('nextHours')}
+                        onBlur={handleBlur('nextHours')}
+                        value={values.nextHours}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                    </>
+                  )}
 
-                    <DropDown
-                      label={'Drivetrain'}
-                      textColor={
-                        values.driveTrain
-                          ? colors.text.dimBlack
-                          : colors.text.grey
-                      }
-                      placeholder={'Select'}
-                      onValueChange={value =>
-                        setFieldValue('driveTrain', value)
-                      }
-                      dynamicData={drivetrainTypes}
-                      initialValue={values.driveTrain}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.driveTrain && errors.driveTrain}
-                    />
+                  {vehicleDetails?.vehicleType?.name === 'Farm and Ranch' && (
+                    <>
+                      <InputField
+                        label="Type"
+                        placeholder="e.g. Farm Tractor, Harvester"
+                        onChangeText={handleChange('type')}
+                        onBlur={handleBlur('type')}
+                        value={values.type}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Engine"
+                        placeholder="Enter Engine"
+                        onChangeText={handleChange('engine')}
+                        onBlur={handleBlur('engine')}
+                        value={values.engine}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="VIN"
+                        placeholder="Enter VIN"
+                        onChangeText={handleChange('VIN')}
+                        onBlur={handleBlur('VIN')}
+                        value={values.VIN}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Change Oil Every (Hours)"
+                        placeholder="Enter interval"
+                        onChangeText={handleChange('changeOilEvery')}
+                        onBlur={handleBlur('changeOilEvery')}
+                        value={values.changeOilEvery}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        
+                      />
+                      <CustomDatePicker
+                        label="Oil Change Date"
+                        dateStyle={{ width: vw * 80, marginBottom: vh * 5,backgroundColor:'#fff' }}
+                        date={
+                          values.mileageDate ? new Date(values.mileageDate) : null
+                        }
+                        onDateChange={date =>
+                          setFieldValue('mileageDate', date.toISOString())
+                        }
+                      />
+                      <InputField
+                        label="Hours"
+                        placeholder="Enter Hours"
+                        onChangeText={handleChange('hours')}
+                        onBlur={handleBlur('hours')}
+                        value={values.hours}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        
+                      />
+                      <InputField
+                        label="Next Oil Change (Hours)"
+                        placeholder="Enter Next Oil Change Hours"
+                        onChangeText={handleChange('nextHours')}
+                        onBlur={handleBlur('nextHours')}
+                        value={values.nextHours}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        
+                      />
+                    </>
+                  )}
 
+                  {vehicleDetails?.vehicleType?.name === 'ATV /UTV / Boat' && (
+                    <>
+                      <InputField
+                        label="Type"
+                        placeholder="e.g. Boat, ATV, UTV"
+                        onChangeText={handleChange('type')}
+                        onBlur={handleBlur('type')}
+                        value={values.type}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Engine"
+                        placeholder="Enter Engine Info"
+                        onChangeText={handleChange('engine')}
+                        onBlur={handleBlur('engine')}
+                        value={values.engine}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="VIN"
+                        placeholder="Enter VIN"
+                        onChangeText={handleChange('VIN')}
+                        onBlur={handleBlur('VIN')}
+                        value={values.VIN}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                      />
+                      <InputField
+                        label="Change Oil Every (Hours)"
+                        placeholder="Enter interval"
+                        onChangeText={handleChange('changeOilEvery')}
+                        onBlur={handleBlur('changeOilEvery')}
+                        value={values.changeOilEvery}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        
+                      />
+                      <CustomDatePicker
+                        label="Oil Change Date"
+                        dateStyle={{ width: vw * 80, marginBottom: vh * 5,backgroundColor:'#fff' }}
+                        date={
+                          values.mileageDate ? new Date(values.mileageDate) : null
+                        }
+                        onDateChange={date =>
+                          setFieldValue('mileageDate', date.toISOString())
+                        }
+                      />
+                      <InputField
+                        label="Hours"
+                        placeholder="Enter Hours"
+                        onChangeText={handleChange('hours')}
+                        onBlur={handleBlur('hours')}
+                        value={values.hours}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        
+                      />
+                      <InputField
+                        label="Next Oil Change (Hours)"
+                        placeholder="Enter Next Oil Change Hours"
+                        onChangeText={handleChange('nextHours')}
+                        onBlur={handleBlur('nextHours')}
+                        value={values.nextHours}
+                        style={{ width: vw * 85, marginBottom: vh * 5 }}
+                        
+                      />
+                    </>
+                  )}
+
+                  {vehicleDetails?.vehicleType?.name === 'Other' && (
                     <InputField
-                      label="Tire Pressure"
-                      placeholder="Enter Tire Pressure"
-                      onChangeText={handleChange('tirePressure')}
-                      onBlur={handleBlur('tirePressure')}
-                      value={values.tirePressure}
-                      style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.tirePressure && errors.tirePressure}
-                      keyboardType={'numeric'}
-                    />
-                    <InputField
-                      label="Notes"
-                      placeholder="Enter Notes"
+                      label="Description"
+                      placeholder="Enter Description"
                       multiline={true}
-                      onChangeText={handleChange('notes')}
-                      onBlur={handleBlur('notes')}
-                      value={values.notes}
+                      onChangeText={handleChange('description')}
+                      onBlur={handleBlur('description')}
+                      value={values.description}
                       style={{ width: vw * 85, marginBottom: vh * 5 }}
-                      errors={touched.notes && errors.notes}
+                    />
+                  )}
+
+                   <InputField
+                    label="Turbo/Super charger"
+                    placeholder="Type & Description"
+                    onChangeText={handleChange('turboCharger')}
+                    onBlur={handleBlur('turboCharger')}
+                    value={values.turboCharger}
+                    style={{ width: vw * 85, marginBottom: vh * 5 }}
+                    placeholderTextColor={colors?.text?.grey}
+                  />
+                        <InputField
+                    label="Transmission"
+                    placeholder="Type & Description"
+                    onChangeText={handleChange('transmission')}
+                    onBlur={handleBlur('transmission')}
+                    value={values.transmission}
+                    style={{ width: vw * 85, marginBottom: vh * 5 }}
+                    placeholderTextColor={colors?.text?.grey}
+                  />
+                       <InputField
+                    label="Engine oil"
+                    placeholder="Type & Description"
+                    onChangeText={handleChange('engineOilType')}
+                    onBlur={handleBlur('engineOilType')}
+                    value={values.engineOilType}
+                    style={{ width: vw * 85, marginBottom: vh * 5 }}
+                    placeholderTextColor={colors?.text?.grey}
+                  />
+                       <InputField
+                      label="Comments"
+                      placeholder="Enter Comments"
+                      multiline={true}
+                      onChangeText={handleChange('description')}
+                      onBlur={handleBlur('description')}
+                      value={values.description}
+                      style={{ width: vw * 85, marginBottom: vh * 5 }}
                     />
                     <DocumentImagePicker
                       handleImage={(images, removedImage) =>
@@ -465,7 +593,7 @@ const EditVehicleDetails = ({ route, navigation }) => {
                         style={{ marginTop: spacing.medium }}
                         color={colors.theme.secondary} />
                     ) : (
-                      <View style={{ marginTop: spacing.medium }}>
+                      <View style={{ marginTop: spacing.medium ,marginBottom:20}}>
                         <MainButtonWithGradient
                           title={'Update Vehicle'}
                           onPress={handleSubmit}

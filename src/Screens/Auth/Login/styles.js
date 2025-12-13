@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   submitButton: {
-    // marginTop: spacing.small,
     color: colors.theme.secondary,
     width:'90%'
   },
