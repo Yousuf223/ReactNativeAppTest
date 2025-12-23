@@ -22,6 +22,7 @@ import { vh, vw } from '../../../theme/units';
 import fonts from '../../../Assets/fonts';
 import { year } from '../../../Utils/dummyData';
 import { cylinderOptions, drivetrainTypes, fuelTypes, transmissionTypes } from '../../../Utils/dropdownItems';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const EditVehicleDetails = ({ route, navigation }) => {
   const vehicleDetails = route?.params?.vehicle;
@@ -108,6 +109,12 @@ console.log('vehicleDetails?.recordType',deletedImages)
   return (
     <>
       <CustomHeader title={`EDIT`} />
+           <KeyboardAwareScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ flexGrow: 1 }}
+              enableOnAndroid={true}
+              keyboardShouldPersistTaps="handled"
+              extraScrollHeight={vh * 10}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1 }}>
@@ -140,6 +147,9 @@ console.log('vehicleDetails?.recordType',deletedImages)
             turboCharger:vehicleDetails?.additionalDetails?.turboCharger || false,
             transmissionType:vehicleDetails?.additionalDetails?.transmissionType?.toString()|| "",
                 engineOilType: vehicleDetails?.additionalDetails?.engineOilType || '',
+                          changeOilEvery: vehicleDetails?.additionalDetails?.changeOilEvery || '',
+  mileageDate:vehicleDetails?.additionalDetails?.mileageDate || "",
+  mileage:vehicleDetails?.additionalDetails?.mileage ||"",
           }}
           validationSchema={vehicleValidation}
           onSubmit={handleSubmitForm}>
@@ -168,8 +178,8 @@ console.log('vehicleDetails?.recordType',deletedImages)
                   />
                   <View style={{ alignItems: 'center', marginTop: vh * 4 }}>
                     <InputField
-                      label={`${vehicleDetails?.vehicleType?.name} Make`}
-                      placeholder={`Enter ${vehicleDetails?.vehicleType?.name} Make`}
+                      label={`Make`}
+                      placeholder={`Enter Make`}
                       onChangeText={handleChange('make')}
                       onBlur={handleBlur('make')}
                       value={values.make}
@@ -210,9 +220,9 @@ console.log('vehicleDetails?.recordType',deletedImages)
                       <InputField
                         label="Engine"
                         placeholder="Enter Engine Info"
-                        onChangeText={handleChange('engine')}
-                        onBlur={handleBlur('engine')}
-                        value={values.engine}
+                        onChangeText={handleChange('engineSize')}
+                        onBlur={handleBlur('engineSize')}
+                           value={values.engineSize}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
                       <InputField
@@ -286,9 +296,9 @@ console.log('vehicleDetails?.recordType',deletedImages)
                       <InputField
                         label="Engine"
                         placeholder="Enter Engine Info"
-                        onChangeText={handleChange('engine')}
-                        onBlur={handleBlur('engine')}
-                        value={values.engine}
+                        onChangeText={handleChange('engineSize')}
+                        onBlur={handleBlur('engineSize')}
+                          value={values.engineSize}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
                       <InputField
@@ -350,9 +360,9 @@ console.log('vehicleDetails?.recordType',deletedImages)
                       <InputField
                         label="Engine"
                         placeholder="Enter Engine"
-                        onChangeText={handleChange('engine')}
-                        onBlur={handleBlur('engine')}
-                        value={values.engine}
+                        onChangeText={handleChange('engineSize')}
+                        onBlur={handleBlur('engineSize')}
+                        value={values.engineSize}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
                       <InputField
@@ -413,9 +423,9 @@ console.log('vehicleDetails?.recordType',deletedImages)
                       <InputField
                         label="Engine"
                         placeholder="Enter Engine"
-                        onChangeText={handleChange('engine')}
-                        onBlur={handleBlur('engine')}
-                        value={values.engine}
+                        onChangeText={handleChange('engineSize')}
+                        onBlur={handleBlur('engineSize')}
+                        value={values.engineSize}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
                       <InputField
@@ -479,9 +489,9 @@ console.log('vehicleDetails?.recordType',deletedImages)
                       <InputField
                         label="Engine"
                         placeholder="Enter Engine Info"
-                        onChangeText={handleChange('engine')}
-                        onBlur={handleBlur('engine')}
-                        value={values.engine}
+                        onChangeText={handleChange('engineSize')}
+                        onBlur={handleBlur('engineSize')}
+                       value={values.engineSize}
                         style={{ width: vw * 85, marginBottom: vh * 5 }}
                       />
                       <InputField
@@ -558,7 +568,7 @@ console.log('vehicleDetails?.recordType',deletedImages)
                     placeholder="Type & Description"
                     onChangeText={handleChange('transmission')}
                     onBlur={handleBlur('transmission')}
-                    value={values.transmission}
+                    value={values.transmissionType}
                     style={{ width: vw * 85, marginBottom: vh * 5 }}
                     placeholderTextColor={colors?.text?.grey}
                   />
@@ -628,6 +638,7 @@ console.log('vehicleDetails?.recordType',deletedImages)
           }}
         />
       </ScrollView>
+      </KeyboardAwareScrollView>
     </>
   );
 };
